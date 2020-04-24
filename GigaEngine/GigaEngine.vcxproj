@@ -87,24 +87,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EngineFiles\Component.cpp" />
-    <ClCompile Include="EngineFiles\GameObjectManager.cpp" />
-    <ClCompile Include="EngineFiles\System.cpp" />
-    <ClCompile Include="EngineFiles\ComponentManager.cpp" />
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\glad.c" />
-    <ClCompile Include="EngineFiles\Movement.cpp" />
-    <ClCompile Include="EngineFiles\SystemManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineFiles\Component.h" />
-    <ClInclude Include="EngineFiles\GameObjectManager.h" />
-    <ClInclude Include="EngineFiles\System.h" />
-    <ClInclude Include="EngineFiles\ComponentManager.h" />
-    <ClInclude Include="EngineFiles\ComponentOrder.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />
-    <ClInclude Include="EngineFiles\Movement.h" />
-    <ClInclude Include="EngineFiles\SystemManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
