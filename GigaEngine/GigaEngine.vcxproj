@@ -57,14 +57,15 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glfw3dll.lib;opengl32.lib;rttr_core_d.lib.;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -74,26 +75,38 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glfw3dll.lib;opengl32.lib;rttr_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EngineFiles\Component.cpp" />
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\glad.c" />
+    <ClCompile Include="EngineFiles\Material.cpp" />
+    <ClCompile Include="EngineFiles\Mesh.cpp" />
+    <ClCompile Include="EngineFiles\Movement.cpp" />
+    <ClCompile Include="EngineFiles\Transform.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MaterialProperty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineFiles\Component.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />
+    <ClInclude Include="EngineFiles\Material.h" />
+    <ClInclude Include="EngineFiles\Mesh.h" />
+    <ClInclude Include="EngineFiles\Movement.h" />
+    <ClInclude Include="EngineFiles\Transform.h" />
+    <ClInclude Include="EngineFiles\Vertex.h" />
+    <ClInclude Include="MaterialProperty.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

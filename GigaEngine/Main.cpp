@@ -1,4 +1,6 @@
-#include "EngineFiles/GameObject.h"
+
+#include <iostream>
+
 #include "EngineFiles/Movement.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -6,6 +8,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "EngineFiles/GameObject.h"
 
 static const struct
 {
@@ -38,7 +41,7 @@ static const char* fragment_shader_text =
 "    gl_FragColor = vec4(color, 1.0);\n"
 "}\n";
 
-const glm::vec3 zAxis(0, 1, 0);
+const glm::vec3 zAxis(0, 0, 1);
 
 int main(void)
 {
@@ -95,10 +98,11 @@ int main(void)
   glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
     sizeof(vertices[0]), (void*)(sizeof(float) * 2));
 
+  GameObject object("Game");
+  Movement* movement = object.AddComponent<Movement>();
 
-  GameObject object;
-  object.AddComponent<Movement>();
-  std::cout << object.GetComponent<Movement>() << std::endl;
+  movement->GetVelocity() = glm::vec2(1,100);
+  std::cout << "Movement: Velocity = " << movement->GetVelocity().x << "," << movement->GetVelocity().y << std::endl;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -117,15 +121,14 @@ int main(void)
       ratio = x / static_cast<float>(y);
 
       m = glm::identity<glm::mat4x4>();
-      m = glm::rotate(m, static_cast<float>(glfwGetTime()), zAxis);
-      p = glm::ortho(ratio, -ratio, -1.0f, 1.0f, 1.0f, -1.0f);
-      mvp = glm::matrixCompMult(m, p);
-
+      m = glm::rotate(m, glm::radians(static_cast<float>(100 * glfwGetTime())), glm::vec3(0.0, 0.0, 1.0));
+      p = glm::ortho(ratio, -ratio, -1.0f, 1.0f, -1.0f, 1.0f);
+      mvp = p * m;
 
       glUseProgram(program);
       glad_glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
       glDrawArrays(GL_TRIANGLES, 0, 3);
-
+      
       /* Swap front and back buffers */
       glfwSwapBuffers(window);
     }
