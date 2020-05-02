@@ -6,11 +6,8 @@ set(CMAKE_CXX_FLAGS)
 
 add_subdirectory(lib)
 add_subdirectory(include)
+add_subdirectory(src)
 
-add_executable(${PROJECT_NAME} main.cpp src/glad.c )
-
-target_link_libraries(${PROJECT_NAME} glfw opengl32 ${GLFW_LIBRARIES})
-
-
+add_executable(${PROJECT_NAME} ${GigaGrunts_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} glad glfw)
