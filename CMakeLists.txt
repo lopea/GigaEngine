@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS)
 
 add_subdirectory(lib)
-add_subdirectory(include)
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} ${GigaGrunts_SOURCES})
