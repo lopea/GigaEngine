@@ -110,8 +110,8 @@ void Graphics::Update()
     float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
     float x = (tanf(timeValue) / 2.0f) + 0.1f;
     
-    shader_.setColor("myColor", 1.0f, greenValue, 0.5f);
-    shader_.setFloat("xOffset", x);
+    //shader_.setColor("myColor", 1.0f, greenValue, 0.5f);
+    //shader_.setFloat("xOffset", x);
     
     // Used to draw a single triangle
     glBindVertexArray(VBO_);
