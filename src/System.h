@@ -2,7 +2,6 @@
 #define ENGINE_SYSTEM_H
 
 #endif //ENGINE_SYSTEM_H
-
 class System
 {
 public:

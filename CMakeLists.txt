@@ -14,14 +14,22 @@ set(Giga_SOURCES
         src/Graphics.h
         src/Shader.cpp
         src/Shader.h
-        src/System.h)
+        src/System.h
+        src/EntityManager.cpp
+        src/EntityManager.h
+        src/ComponentBase.h
+        src/SystemBase.cpp
+        src/SystemBase.h)
 
 # Adding all the Directories for linking
 add_subdirectory(lib)
 add_subdirectory(src)
 
+# Adding rttr includes as adding them to the subdirectory does nothing
+include_directories(lib/rttr/include)
+
 # Making executable
 add_executable(${PROJECT_NAME} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw)
+target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY})
