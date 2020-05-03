@@ -1,5 +1,4 @@
 #include "Graphics.h"
-#include "Shader.h"
 
 int main()
 {
@@ -10,7 +9,6 @@ int main()
   openGl.Update();
   
   openGl.Close();
-
   
   return 0;
 }
