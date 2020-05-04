@@ -5,19 +5,19 @@
 #ifndef _ENTITYMANAGER_H_
 #define _ENTITYMANAGER_H_
 #include <vector>
+#include "Entity.h"
 
-typedef unsigned int Entity;
 class EntityManager {
  public:
   static void Initialize();
-  static Entity AddEntity();
+  static Entity& AddEntity();
   static void DestroyEntity(Entity entity);
   static void CheckForDestruction();
  private:
   EntityManager();
   static EntityManager manager_;
   std::vector<Entity> entities_;
-  std::vector<Entity> destroy_;
+  std::vector<unsigned int> destroy_;
   static bool Init_;
 };
 

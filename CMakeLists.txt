@@ -19,7 +19,7 @@ set(Giga_SOURCES
         src/EntityManager.h
         src/ComponentBase.h
         src/SystemBase.cpp
-        src/SystemBase.h)
+        src/SystemBase.h src/ComponentList.cpp src/ComponentList.h src/Entity.cpp src/Entity.h src/ComponentManager.cpp src/ComponentManager.h src/ComponentTest.h src/EntityComponents.h)
 
 # Adding all the Directories for linking
 add_subdirectory(lib)

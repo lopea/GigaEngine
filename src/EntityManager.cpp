@@ -9,13 +9,12 @@
 bool EntityManager::Init_ = false;
 EntityManager EntityManager::manager_ = EntityManager();
 
-Entity EntityManager::AddEntity ()
+Entity& EntityManager::AddEntity ()
 {
-  static Entity newE = 0;
-  manager_.entities_.push_back(newE);
-  Entity ret = newE;
-  newE++;
-  return ret;
+  static unsigned int id = 0;
+  manager_.entities_.push_back(Entity(id));
+  id++;
+  return manager_.entities_.back();
 }
 void EntityManager::Initialize ()
 {
@@ -24,7 +23,7 @@ void EntityManager::Initialize ()
 void EntityManager::DestroyEntity (Entity entity)
 {
   if(std::find(manager_.destroy_.begin(),manager_.destroy_.end(), entity) != manager_.destroy_.end())
-    manager_.destroy_.push_back(entity);
+    manager_.destroy_.push_back(entity.getID());
 }
 void EntityManager::CheckForDestruction ()
 {
