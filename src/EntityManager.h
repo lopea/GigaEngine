@@ -5,7 +5,7 @@
 #ifndef _ENTITYMANAGER_H_
 #define _ENTITYMANAGER_H_
 #include <vector>
-#include "Entity.h"
+#include "EntityBase.h"
 
 class EntityManager {
  public:

@@ -2,7 +2,7 @@
 // Created by javier on 5/3/2020.
 //
 
-#include "Entity.h"
+#include "EntityBase.h"
 #include "ComponentManager.h"
 
 

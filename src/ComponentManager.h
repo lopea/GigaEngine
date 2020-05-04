@@ -18,10 +18,10 @@ public:
     static void Shutdown();
 
     template<typename T>
-    static bool GetComponent(Entity& entity, T &&result);
+    static T& GetComponent(Entity& entity);
 
     template<typename T>
-    static T &AddComponent(Entity& entity);
+    static T& AddComponent(Entity& entity);
 
 private:
     ComponentManager() = default;
@@ -32,7 +32,7 @@ private:
 };
 
 template<typename T>
- bool ComponentManager::GetComponent(Entity& entity, T && result)
+ T& ComponentManager::GetComponent(Entity& entity)
 {
     //get the type of the component
     rttr::type t = rttr::type::get<T>();
@@ -40,10 +40,8 @@ template<typename T>
     //if the type does not derive from component,
     if (!t.is_derived_from<ComponentBase>())
     {
-        //TODO: Throw "type not a component" exception
-
-        //dont do anything
-        return false;
+        //throw exception
+       throw TypeNotComponentException(t);
     }
 
     //find the list corresponding to the type
@@ -56,9 +54,11 @@ template<typename T>
         ComponentList<T> *list = static_cast<ComponentList<T> *>(it->second);
 
         //get the component from the list and return
-        return list->GetComponent(entity, result);
+        return list->GetComponent(entity);
     }
-    return false;
+
+    //nothing has been found, throw exeption
+    throw ComponentNotFoundExeption(t);
 }
 
 template<typename T>

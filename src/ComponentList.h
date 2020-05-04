@@ -6,7 +6,9 @@
 #define _COMPONENTLIST_H_
 
 #include <map>
-#include "Entity.h"
+#include "EntityBase.h"
+#include "ComponentExceptions.h"
+
 
 /*!
  * Handler to hold Componentlists without their unique type
@@ -23,9 +25,9 @@ template<typename T>
 class ComponentList : public GenericComponentList
 {
 public:
-    bool GetComponent(Entity entity, T &&output) ;
+    T& GetComponent(Entity entity);
 
-    T &AddComponent(Entity entity);
+    T& AddComponent(Entity entity);
 
     void RemoveComponent(Entity entity);
 
@@ -44,24 +46,22 @@ void ComponentList<T>::RemoveComponent(Entity entity)
     components_.erase(entity);
 }
 
-/*!
- * Get a component based on the entity that is associated with.
- * If a component has been found, it will store the result in the output parameter
- * @tparam T The type of component
- * @param entity the entity that identifies what component to get
- * @param output if a component has been found, it will set the component found to this parameter
- * @return true if a component has been found, false otherwise.
- */
+
 template<typename T>
-bool ComponentList<T>::GetComponent(Entity entity, T &&output)
+T& ComponentList<T>::GetComponent(Entity entity)
 {
+    //get iterator containing the component to find
     auto it = components_.find(entity);
+
+    // if the component exists,
     if (it != components_.end())
     {
-        output = it->second;
-        return true;
+        //send it off!
+        return it->second;
     }
-    return false;
+
+    // nothing was found, throw an exception
+    throw ComponentNotFoundExeption(rttr::type::get<T>());
 
 }
 
@@ -74,6 +74,14 @@ bool ComponentList<T>::GetComponent(Entity entity, T &&output)
 template<typename T>
 T &ComponentList<T>::AddComponent(Entity entity)
 {
+    //check if the component already exists
+    auto it = components_.find(entity);
+
+    //return the one found if it exists
+    if(it != components_.end())
+        return it->second;
+
+    //component does not exist
     //add the entry to the component list
     components_.insert(std::pair<Entity,T>(entity, T()));
 

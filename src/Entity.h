@@ -2,39 +2,26 @@
 // Created by javier on 5/3/2020.
 //
 
-#ifndef _ENTITY_H_
-#define _ENTITY_H_
-
-#include <rttr/type>
-
-
-class Entity
+#ifndef GIGAENGINE_ENTITY_H
+#define GIGAENGINE_ENTITY_H
+#include "ComponentManager.h"
+template<typename T>
+T& Entity::GetComponent ()
 {
-public:
-    Entity();
+    return ComponentManager::GetComponent<T>(*this);
+}
+template<typename T>
+T &Entity::AddComponent ()
+{
+    rttr::type t = rttr::type::get<T>();
+    auto it = std::find(types_.begin(),types_.end(), t);
+    if(it != types_.end())
+        return GetComponent<T>();
 
-    explicit Entity(unsigned int id);
+    //add type to the list
+    types_.push_back(t);
 
-
-    bool HasType(rttr::type &type) const;
-
-    template<typename T>
-    bool GetComponent(T &&result);
-
-    template<typename T>
-    T &AddComponent();
-
-    [[nodiscard]] unsigned int getID() const;
-
-    bool operator==(unsigned int id) const;
-    bool operator==(const Entity& entity);
-    bool operator< (const Entity& entity) const;
-    friend bool operator==(unsigned int id_, const Entity& entity);
-private:
-    std::vector<rttr::type> types_; //!< store all types of components that pertain to this entity
-    unsigned int id_;               //!< identifier for the type
-};
-
-
-
-#endif //_ENTITY_H_
+    //add type to the list
+    return ComponentManager::AddComponent<T>(*this);
+}
+#endif //GIGAENGINE_ENTITY_H
