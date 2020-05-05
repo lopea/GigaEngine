@@ -8,6 +8,7 @@
 
 #include "Entity.h"
 #include <vector>
+
 class EntityList
 {
 public:
@@ -34,6 +35,7 @@ private:
 template<typename T, typename Func>
 void EntityList::ForEach(Func function)
 {
+
     std::for_each(entities_.begin(), entities_.end(), [function](Entity& entity)
     {
        if(entity.HasType<T>())

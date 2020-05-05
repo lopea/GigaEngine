@@ -98,17 +98,13 @@ void Graphics::Update()
     // -----------
     for(int i = 0; i < 5000; i++)
     {
-        Entity ent = EntityManager::AddEntity();
+        Entity& ent = EntityManager::AddEntity();
         ent.AddComponent<ComponentTest>();
     }
 
     while (!glfwWindowShouldClose(window_))
     {
         double start = glfwGetTime();
-        EntityManager::GetEntities().ForEach<ComponentTest>([] (ComponentTest& test)
-        {
-            test.value = glfwGetTime();
-        });
         // input
         // -----
         processInput(window_);
