@@ -3,24 +3,19 @@
 #include "EntityManager.h"
 #include "ComponentTest.h"
 #include <rttr/type>
+
 int main()
 {
-  Graphics openGl;
-  EntityManager::Initialize();
-  Entity ent = EntityManager::AddEntity();
+    Graphics openGl;
+    EntityManager::Initialize();
 
-  ComponentTest& t = ent.AddComponent<ComponentTest>();
-  t.value = 4;
 
-  ComponentTest& y = ent.GetComponent<ComponentTest>();
-  y.value = 5;
+    openGl.Init();
 
-  std::cout << t.value << std::endl;
-  openGl.Init();
-  
-  openGl.Update();
-  
-  openGl.Close();
-  
-  return 0;
+
+    openGl.Update();
+
+    openGl.Close();
+
+    return 0;
 }

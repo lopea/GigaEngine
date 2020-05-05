@@ -6,6 +6,7 @@
 #define _ENTITY_H_
 
 #include <rttr/type>
+#include "ComponentBase.h"
 
 
 class Entity
@@ -15,11 +16,11 @@ public:
 
     explicit Entity(unsigned int id);
 
-
-    bool HasType(rttr::type &type) const;
+    template<typename T>
+    bool HasType() const;
 
     template<typename T>
-    T& GetComponent();
+    T &GetComponent();
 
     template<typename T>
     T &AddComponent();
@@ -27,14 +28,18 @@ public:
     [[nodiscard]] unsigned int getID() const;
 
     bool operator==(unsigned int id) const;
-    bool operator==(const Entity& entity);
-    bool operator< (const Entity& entity) const;
-    friend bool operator==(unsigned int id_, const Entity& entity);
-private:
-    std::vector<rttr::type> types_; //!< store all types of components that pertain to this entity
-    unsigned int id_;               //!< identifier for the type
-};
 
+    bool operator==(const Entity &entity) const;
+
+    bool operator<(const Entity &entity) const;
+
+    friend bool operator==(unsigned int id_, const Entity &entity);
+
+private:
+    std::vector<ComponentBase *> components_; //!< store raw components references that pertain to this entity
+    std::vector<rttr::type> types_;           //!< store all types that the entity has
+    unsigned int id_;                         //!< identifier for the type
+};
 
 
 #endif //_ENTITY_H_

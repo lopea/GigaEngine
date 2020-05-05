@@ -6,6 +6,7 @@
 #define _ENTITYMANAGER_H_
 #include <vector>
 #include "EntityBase.h"
+#include "EntityList.h"
 
 class EntityManager {
  public:
@@ -13,10 +14,12 @@ class EntityManager {
   static Entity& AddEntity();
   static void DestroyEntity(Entity entity);
   static void CheckForDestruction();
- private:
+  static EntityList& GetEntities();
   EntityManager();
+ private:
+
   static EntityManager manager_;
-  std::vector<Entity> entities_;
+  EntityList entities_;
   std::vector<unsigned int> destroy_;
   static bool Init_;
 };

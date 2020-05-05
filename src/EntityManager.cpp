@@ -12,7 +12,7 @@ EntityManager EntityManager::manager_ = EntityManager();
 Entity& EntityManager::AddEntity ()
 {
   static unsigned int id = 0;
-  manager_.entities_.push_back(Entity(id));
+  manager_.entities_.Add(Entity(id));
   id++;
   return manager_.entities_.back();
 }
@@ -30,4 +30,13 @@ void EntityManager::CheckForDestruction ()
   //TODO: do it.
 }
 
-EntityManager::EntityManager () {}
+EntityManager::EntityManager() : entities_()
+{
+}
+
+EntityList &EntityManager::GetEntities()
+{
+    return manager_.entities_;
+}
+
+
