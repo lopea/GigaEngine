@@ -3,7 +3,7 @@
 //
 
 #include "EntityBase.h"
-#include "ComponentManager.h"
+#include "../Component/ComponentManager.h"
 
 
 Entity::Entity() : id_(UINT_MAX)

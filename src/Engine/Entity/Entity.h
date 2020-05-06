@@ -5,8 +5,10 @@
 #ifndef GIGAENGINE_ENTITY_H
 #define GIGAENGINE_ENTITY_H
 #include "EntityBase.h"
-#include "ComponentManager.h"
+#include "../Component/ComponentExceptions.h"
+#include "../Component/ComponentManager.h"
 #include <rttr/type>
+
 template<typename T>
 T& Entity::GetComponent ()
 {
@@ -24,6 +26,7 @@ T& Entity::GetComponent ()
     throw ComponentNotFoundExeption(t);
     //return ComponentManager::GetComponent<T>(*this);
 }
+
 template<typename T>
 T &Entity::AddComponent ()
 {
@@ -44,4 +47,5 @@ bool Entity::HasType() const
 {
     return !types_.empty() && std::find(types_.begin(),types_.end(), rttr::type::get<T>()) != types_.end();
 }
+
 #endif //GIGAENGINE_ENTITY_H

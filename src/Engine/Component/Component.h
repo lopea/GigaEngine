@@ -6,10 +6,12 @@
 #define _COMPONENTBASE_H_
 #include <rttr/type>
 
+#define SET_AS_COMPONENT RTTR_ENABLE(Component)
+
 /*!
  * Component base for all component types.
- * All Components must derive from this class
+ * All Component must derive from this class
  */
-struct ComponentBase {RTTR_ENABLE()};
+struct Component {RTTR_ENABLE()};
 
 #endif //_COMPONENTBASE_H_

@@ -6,7 +6,7 @@
 #define _ENTITY_H_
 
 #include <rttr/type>
-#include "ComponentBase.h"
+#include "../Component/Component.h"
 
 
 class Entity
@@ -36,7 +36,7 @@ public:
     friend bool operator==(unsigned int id_, const Entity &entity);
 
 private:
-    std::vector<ComponentBase *> components_; //!< store raw components references that pertain to this entity
+    std::vector<Component *> components_;     //!< store raw components references that pertain to this entity
     std::vector<rttr::type> types_;           //!< store all types that the entity has
     unsigned int id_;                         //!< identifier for the type
 };

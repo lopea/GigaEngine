@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <rttr/type>
 #include "ComponentList.h"
-#include "ComponentBase.h"
+#include "Component.h"
 
 class ComponentManager
 {
@@ -38,7 +38,7 @@ template<typename T>
     rttr::type t = rttr::type::get<T>();
 
     //if the type does not derive from component,
-    if (!t.is_derived_from<ComponentBase>())
+    if (!t.is_derived_from<Component>())
     {
         //throw exception
        throw TypeNotComponentException(t);
@@ -68,7 +68,7 @@ template<typename T>
     rttr::type t = rttr::type::get<T>();
 
     //check if the type is valid
-    if (!t.is_derived_from<ComponentBase>())
+    if (!t.is_derived_from<Component>())
     {
         //TODO: Throw "type not a component" exception
     }

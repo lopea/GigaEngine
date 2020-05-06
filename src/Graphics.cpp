@@ -5,9 +5,15 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Graphics.h"
-#include "ComponentTest.h"
-#include "EntityManager.h"
-#include "Entity.h"
+#include "Engine/Entity/EntityManager.h"
+#include "Engine/Component/ComponentTest.h"
+#include "Renderer.h"
+#include "Translation.h"
+#include "Rotation.h"
+#include "Scale.h"
+#include "LocalToWorldMatrix.h"
+#include "MatrixSystem.h"
+#include "RenderSystem.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -71,16 +77,16 @@ void Graphics::Init()
 
     // Initializing all buffers
     //-------------------------
-    glGenVertexArrays(1, &VAO_);
-    glGenBuffers(1, &VBO_);
-    glGenBuffers(1, &EBO_);
+    glGenVertexArrays(1, &shader_.VAO_);
+    glGenBuffers(1, &shader_.VBO_);
+    glGenBuffers(1, &shader_.EBO_);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO_);
+    glBindVertexArray(shader_.VAO_);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+    glBindBuffer(GL_ARRAY_BUFFER, shader_.VBO_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shader_.EBO_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
@@ -96,47 +102,52 @@ void Graphics::Update()
 {
     // render loop
     // -----------
-    for(int i = 0; i < 5000; i++)
+    for (int i = 0; i < 100; i++)
     {
-        Entity& ent = EntityManager::AddEntity();
+        Entity &ent = EntityManager::AddEntity();
         ent.AddComponent<ComponentTest>();
+        Translation& t = ent.AddComponent<Translation>();
+        t.value = glm::vec3(i%10, i/10, 0);
+        ent.AddComponent<Rotation>();
+        ent.AddComponent<Scale>();
+        Renderer& rend = ent.AddComponent<Renderer>();
+        rend.shader = shader_;
+        ent.AddComponent<LocalToWorldMatrix>();
     }
 
+    MatrixSystem m_system;
+    RenderSystem r_system;
     while (!glfwWindowShouldClose(window_))
     {
-        double start = glfwGetTime();
+
         // input
         // -----
         processInput(window_);
-
+        float timer = glfwGetTime();
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        m_system.Update();
+        r_system.Update();
         // Shader used to render triangles
         shader_.use();
         float timeValue = glfwGetTime();
         float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
         float x = (tanf(timeValue) / 2.0f) + 0.1f;
 
-        //shader_.setColor("myColor", 1.0f, greenValue, 0.5f);
-        //shader_.setFloat("xOffset", x);
+        //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
+        //shader.setFloat("xOffset", x);
 
         // Used to draw a single triangle
-        glBindVertexArray(VBO_);
-        glDrawArrays(GL_TRIANGLES, 0, 9);
 
-        // Used to draw many rectangles (AKA, two triangles together).
-        glBindVertexArray(VAO_);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window_);
         glfwPollEvents();
-        std::cout << 1 / (glfwGetTime() - start) << std::endl;
+        std::cout << 1/(glfwGetTime() - timer) << std::endl;
     }
 }
 
@@ -144,9 +155,7 @@ void Graphics::Close()
 {
     // de-allocate all resources once they've outlived their purpose:
     // --------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO_);
-    glDeleteBuffers(1, &VBO_);
-    glDeleteProgram(shader_.ID_);
+    shader_.Clear();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------

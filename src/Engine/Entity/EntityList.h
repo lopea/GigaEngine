@@ -35,14 +35,15 @@ private:
 template<typename T, typename Func>
 void EntityList::ForEach(Func function)
 {
-
-    std::for_each(entities_.begin(), entities_.end(), [function](Entity& entity)
+    for(Entity& entity : entities_)
     {
-       if(entity.HasType<T>())
-       {
-           function(entity.GetComponent<T>());
-       }
-    });
+        if(entity.HasType<T>())
+        {
+            function(entity.GetComponent<T>());
+        }
+    }
+
+
 }
 
 template<typename T1, typename T2>

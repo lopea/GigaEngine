@@ -6,8 +6,9 @@
 #define _COMPONENTLIST_H_
 
 #include <map>
-#include "EntityBase.h"
+
 #include "ComponentExceptions.h"
+#include "../Entity/EntityBase.h"
 
 
 /*!
