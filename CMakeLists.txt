@@ -5,7 +5,7 @@ project(GigaEngine)
 
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-mavx2")
+set(CMAKE_CXX_FLAGS )
 
 # Adding all the Directories for linking
 
@@ -51,7 +51,11 @@ set(Giga_SOURCES
         src/Mesh.h
         src/MatrixSystem.cpp
         src/MatrixSystem.h
-        src/Renderer.h src/RenderSystem.cpp src/RenderSystem.h)
+        src/Renderer.h
+        src/RenderSystem.cpp
+        src/RenderSystem.h
+        src/Engine/Entity/EntityReferenceList.cpp
+        src/Engine/Entity/EntityReferenceList.h src/RotateTestSystem.cpp src/RotateTestSystem.h)
 
 
 # Making executable

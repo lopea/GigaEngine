@@ -14,6 +14,7 @@
 #include "LocalToWorldMatrix.h"
 #include "MatrixSystem.h"
 #include "RenderSystem.h"
+#include "RotateTestSystem.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -34,6 +35,7 @@ void Graphics::Init()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
     // Only need if using MacOS
 #ifdef __APPLE__
@@ -102,12 +104,12 @@ void Graphics::Update()
 {
     // render loop
     // -----------
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 1000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         ent.AddComponent<ComponentTest>();
         Translation& t = ent.AddComponent<Translation>();
-        t.value = glm::vec3(i%10, i/10, 0);
+        t.value = glm::vec3(i%10 - 5, i/10 - 5, 0);
         ent.AddComponent<Rotation>();
         ent.AddComponent<Scale>();
         Renderer& rend = ent.AddComponent<Renderer>();
@@ -117,6 +119,7 @@ void Graphics::Update()
 
     MatrixSystem m_system;
     RenderSystem r_system;
+    RotateTestSystem rot_system;
     while (!glfwWindowShouldClose(window_))
     {
 
@@ -129,10 +132,11 @@ void Graphics::Update()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        rot_system.Update();
         m_system.Update();
         r_system.Update();
         // Shader used to render triangles
-        shader_.use();
+
         float timeValue = glfwGetTime();
         float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
         float x = (tanf(timeValue) / 2.0f) + 0.1f;
@@ -141,13 +145,20 @@ void Graphics::Update()
         //shader.setFloat("xOffset", x);
 
         // Used to draw a single triangle
+        shader_.use();
 
+        glBindVertexArray(shader_.VBO_);
+        glDrawArrays(GL_TRIANGLES, 0, 9);
+
+        glBindVertexArray(shader_.VAO_);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shader_.EBO_);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window_);
         glfwPollEvents();
-        std::cout << 1/(glfwGetTime() - timer) << std::endl;
+        std::cout << 1/(glfwGetTime() - timer) << std::endl; //frame rate
     }
 }
 

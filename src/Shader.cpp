@@ -71,7 +71,7 @@ void Shader::SetUp(const char* vertexPath, const char* fragmentPath)
         vertexCode   = vShaderStream.str();
         fragmentCode = fShaderStream.str();
     }
-    catch(std::ifstream::failure e)
+    catch(std::ifstream::failure& e)
     {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
     }
@@ -84,6 +84,7 @@ void Shader::SetUp(const char* vertexPath, const char* fragmentPath)
     // vertex Shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
+
     glCompileShader(vertex);
     checkCompileErrors(vertex, "VERTEX");
 

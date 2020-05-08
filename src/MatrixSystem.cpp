@@ -16,12 +16,25 @@ const glm::vec3 rotateAxis = glm::vec3(0, 0, 1);
 
 void MatrixSystem::Update()
 {
+    EntityManager::GetEntities().ForEach<LocalToWorldMatrix>
+            ([](LocalToWorldMatrix &matrix)
+             {
+                 matrix.value = glm::identity<glm::mat4x4>();
+             });
+
+    //update the translation
+    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Translation>
+            ([](LocalToWorldMatrix &matrix, Translation &trans)
+             {
+                 trans.value.x += glm::sin(glfwGetTime()) * 0.005f;
+                 matrix.value = glm::translate(matrix.value, trans.value);
+             });
+
 
     //update the scale first
     EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Scale>
             ([](LocalToWorldMatrix &matrix, Scale &scale)
              {
-                 matrix.value = glm::identity<glm::mat4x4>();
                  matrix.value = glm::scale(matrix.value, scale.value);
              });
 
@@ -34,11 +47,6 @@ void MatrixSystem::Update()
                                             rotateAxis);
              });
 
-    //update the translation
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Translation>
-            ([](LocalToWorldMatrix &matrix, Translation &trans)
-             {
 
-                 matrix.value = glm::translate(matrix.value, trans.value);
-             });
+
 }
