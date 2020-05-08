@@ -5,7 +5,7 @@ project(GigaEngine)
 
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS )
+set(CMAKE_CXX_FLAGS "-mavx2")
 
 # Adding all the Directories for linking
 
@@ -56,7 +56,7 @@ set(Giga_SOURCES
         src/Engine/Entity/EntityReferenceList.cpp
         src/Engine/Entity/EntityReferenceList.h
         src/RotateTestSystem.cpp
-        src/RotateTestSystem.h)
+        src/RotateTestSystem.h src/UniformScale.h)
 
 
 # Making executable

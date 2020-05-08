@@ -4,6 +4,8 @@
 
 #ifndef GIGAENGINE_LOCALTOWORLDMATRIX_H
 #define GIGAENGINE_LOCALTOWORLDMATRIX_H
+#define GLM_FORCE_AVX2
+#define GLM_FORCE_ALIGNED
 #include <glm.hpp>
 #include <ext.hpp>
 #include "Engine/Component/Component.h"

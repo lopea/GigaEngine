@@ -12,18 +12,12 @@
 template<typename T>
 T& Entity::GetComponent ()
 {
-    rttr::type t = rttr::type::get<T>();
-    int count = 0;
-    for(auto& it : types_)
-    {
-        if(it == t)
-        {
-            return *static_cast<T*>(components_[count]);
-        }
-        count++;
-    }
+    auto it = components_.find(rttr::type::get<T>().get_id());
 
-    throw ComponentNotFoundExeption(t);
+    if(it != components_.end())
+        return *static_cast<T*>(it->second);
+
+    throw ComponentNotFoundExeption(rttr::type::get<T>());
     //return ComponentManager::GetComponent<T>(*this);
 }
 
@@ -35,17 +29,17 @@ T &Entity::AddComponent ()
     T& res = ComponentManager::AddComponent<T>(*this);
 
     //add type to the list
-    components_.push_back(&res);
-    types_.push_back(t);
+    components_.insert(std::pair<rttr::type::type_id, Component*>(t.get_id(), &res));
 
     //add type to the list
-    return *static_cast<T*>(components_.back());
+    return *static_cast<T*>(&res);
 }
 
 template<typename T>
 bool Entity::HasType() const
 {
-    return !types_.empty() && std::find(types_.begin(),types_.end(), rttr::type::get<T>()) != types_.end();
+    return !components_.empty() &&
+    components_.find(rttr::type::get<T>().get_id()) != components_.end();
 }
 
 #endif //GIGAENGINE_ENTITY_H

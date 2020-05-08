@@ -36,8 +36,7 @@ public:
     friend bool operator==(unsigned int id_, const Entity &entity);
 
 private:
-    std::vector<Component *> components_;     //!< store raw components references that pertain to this entity
-    std::vector<rttr::type> types_;           //!< store all types that the entity has
+    std::map<rttr::type::type_id, Component*> components_;
     unsigned int id_;                         //!< identifier for the type
 };
 

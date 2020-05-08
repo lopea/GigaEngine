@@ -71,11 +71,12 @@ void EntityList::ForEach(Func function)
     for(Entity& entity : entities_)
     {
         //if the entity has the component type given,
-        if (entity.HasType<T>())
+        try
         {
             //execute the function with the type given.
             function(entity.GetComponent<T>());
         }
+        catch (ComponentNotFoundExeption& e) {}
     }
 }
 
@@ -144,13 +145,13 @@ ReferenceEntityList EntityList::ExcludeTypes()
 template<typename T1, typename T2, typename Func>
 void EntityList::ForEach(Func function)
 {
-    for(int i = 0; i < entities_.size(); ++i)
+    for(auto & entity : entities_)
     {
-        Entity& entity = entities_[i];
-        if(entity.HasType<T1>() && entity.HasType<T2>())
+        try
         {
             function(entity.GetComponent<T1>(),entity.GetComponent<T2>());
         }
+        catch (ComponentNotFoundExeption& e) {}
     }
 }
 

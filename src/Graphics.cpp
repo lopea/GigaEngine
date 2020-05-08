@@ -15,6 +15,7 @@
 #include "MatrixSystem.h"
 #include "RenderSystem.h"
 #include "RotateTestSystem.h"
+#include "UniformScale.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -104,14 +105,14 @@ void Graphics::Update()
 {
     // render loop
     // -----------
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 1000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
-        ent.AddComponent<ComponentTest>();
+        //ent.AddComponent<ComponentTest>();
         Translation& t = ent.AddComponent<Translation>();
         t.value = glm::vec3(i%10 - 5, i/10 - 5, 0);
         ent.AddComponent<Rotation>();
-        ent.AddComponent<Scale>();
+        ent.AddComponent<UniformScale>();
         Renderer& rend = ent.AddComponent<Renderer>();
         rend.shader = shader_;
         ent.AddComponent<LocalToWorldMatrix>();
