@@ -12,7 +12,7 @@ class Graphics
 {
 public:
   
-  explicit Graphics(int Width = 800, int Height = 600, const char* Title = "Working_Project");
+  explicit Graphics(int Width = 1920, int Height = 1080, const char* Title = "Working_Project");
   
   void Init();
   

@@ -4,7 +4,7 @@
 
 #include "EntityBase.h"
 #include "../Component/ComponentManager.h"
-
+#include <climits>
 
 Entity::Entity() : id_(UINT_MAX)
 {}

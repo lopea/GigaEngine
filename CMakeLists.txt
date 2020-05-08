@@ -11,7 +11,6 @@ set(CMAKE_CXX_FLAGS )
 
 
 # Adding rttr includes as adding them to the subdirectory does nothing
-include_directories(lib/rttr/include)
 
 add_subdirectory(lib)
 include_directories(lib/glm)
@@ -55,11 +54,13 @@ set(Giga_SOURCES
         src/RenderSystem.cpp
         src/RenderSystem.h
         src/Engine/Entity/EntityReferenceList.cpp
-        src/Engine/Entity/EntityReferenceList.h src/RotateTestSystem.cpp src/RotateTestSystem.h)
+        src/Engine/Entity/EntityReferenceList.h
+        src/RotateTestSystem.cpp
+        src/RotateTestSystem.h)
 
 
 # Making executable
 add_executable(${PROJECT_NAME} ${Giga_ENGINE_SOURCES} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY})
+target_link_libraries(${PROJECT_NAME} glad glfw rttr_core)
