@@ -31,7 +31,7 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Entity/Entity.h
         src/Engine/Systems/SystemBase.h
         src/Engine/Systems/SystemBase.cpp
-        )
+        src/Engine/Engine.cpp src/Engine/Engine.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES

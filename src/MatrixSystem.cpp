@@ -1,9 +1,10 @@
 //
 // Created by javier on 5/5/2020.
 //
-
+#if __AVX2__
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
+#endif
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
@@ -31,7 +32,7 @@ void MatrixSystem::Update()
     EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Translation>
             ([](LocalToWorldMatrix &matrix, Translation &trans)
              {
-                 //trans.value.x += glm::sin(glfwGetTime()) * 0.005f;
+
                  matrix.value = glm::translate(matrix.value, trans.value);
              });
 
@@ -59,6 +60,9 @@ void MatrixSystem::Update()
                 matrix.value[0].x *= scale.value;
                 matrix.value[1].y *= scale.value;
                 matrix.value[2].z *= scale.value;
+
             });
+
+
 
 }

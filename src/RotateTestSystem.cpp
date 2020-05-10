@@ -3,16 +3,18 @@
 //
 
 #include <GLFW/glfw3.h>
+#include <glm.hpp>
 #include "RotateTestSystem.h"
 #include "Engine/Entity/EntityManager.h"
 #include "Rotation.h"
 
 void RotateTestSystem::Update()
 {
-    float time =  glfwGetTime() * 100;
-    EntityManager::GetEntities().ForEach<Rotation>
-            ([time](Rotation& rot)
+    float time =  glfwGetTime() ;
+    EntityManager::GetEntities().ForEach
+            ([time](Entity& entity)
             {
-                rot.value = time;
+                Rotation& rot = entity.GetComponent<Rotation>();
+                rot.value = glm::sin(time + entity.getID()) * 10;
             });
 }

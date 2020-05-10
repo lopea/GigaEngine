@@ -122,8 +122,10 @@ int main(void)
       m = glm::identity<glm::mat4x4>();
       m = glm::rotate(m, (float)glfwGetTime(), glm::vec3(0,0,-1));
       p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-      mvp = p * m;
+      glm::mat4 v = glm::lookAt(glm::vec3(0), glm::vec3(glm::sin(glfwGetTime())), glm::vec3(0,1,0) );
 
+      mvp = p * m;
+      mvp[3][3] = 1 + glm::sin(glfwGetTime() * 3) * 5;
       glUseProgram(program);
       glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(mvp));
       glDrawArrays(GL_TRIANGLES, 0, 3);

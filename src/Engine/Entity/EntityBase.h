@@ -8,7 +8,9 @@
 #include <rttr/type>
 #include "../Component/Component.h"
 
-
+/*!
+ * Represents an object in game space.
+ */
 class Entity
 {
 public:

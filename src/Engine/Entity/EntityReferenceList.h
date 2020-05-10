@@ -5,7 +5,7 @@
 #ifndef GIGAENGINE_ENTITYREFERENCELIST_H
 #define GIGAENGINE_ENTITYREFERENCELIST_H
 #include "EntityBase.h"
-
+#include "../Component/ComponentExceptions.h"
 /*!
  * Stores references to entities in EntityLists
  */
@@ -94,10 +94,11 @@ void ReferenceEntityList::ForEach(Func function)
 {
     for (auto &reference : references_)
     {
-        if(reference->HasType<T1>() && reference->HasType<T1>())
+        try
         {
             function(reference->GetComponent<T1>(), reference->GetComponent<T2>());
         }
+        catch (ComponentNotFoundExeption& e) {}
     }
 }
 

@@ -149,7 +149,7 @@ void EntityList::ForEach(Func function)
     {
         try
         {
-            function(entity.GetComponent<T1>(),entity.GetComponent<T2>());
+            function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
         }
         catch (ComponentNotFoundExeption& e) {}
     }
