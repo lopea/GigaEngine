@@ -8,10 +8,9 @@
 
 #include "Entity.h"
 #include "EntityReferenceList.h"
-
+#include <omp.h>
 #include <vector>
-
-
+#include <algorithm>
 class EntityList
 {
 public:
@@ -36,7 +35,14 @@ public:
     template<typename T1, typename T2>
     ReferenceEntityList ExcludeTypes();
 
+    template<typename T1, typename T2, typename Func>
+    void ParallelForEach(Func function);
 
+    template<typename Func>
+    void ParallelForEach(Func function);
+
+    template<typename T, typename Func>
+    void ParallelForEach(Func function);
 
     EntityList() = default;
 
@@ -139,21 +145,61 @@ ReferenceEntityList EntityList::ExcludeTypes()
 
     //create a new list and ship it.
     return ReferenceEntityList(lit);
-}
 
+}
 
 template<typename T1, typename T2, typename Func>
 void EntityList::ForEach(Func function)
 {
-    for(auto & entity : entities_)
+
+  for(int i = 0; i < entities_.size(); ++ i)
     {
-        try
-        {
-            function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
-        }
-        catch (ComponentNotFoundExeption& e) {}
+      Entity& entity = entities_[i];
+
+      //this is pretty bad but idk at this point its really fast
+      if(entity.HasType<T1>() && entity.HasType<T2>())
+        function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
     }
 }
+
+
+template<typename T1, typename T2, typename Func>
+void EntityList::ParallelForEach(Func function)
+{
+    #pragma omp parallel for schedule(static) shared(function) default(none)
+    for(int i = 0; i < entities_.size(); ++ i)
+    {
+        Entity& entity = entities_[i];
+
+        //this is pretty bad but idk at this point its really fast
+        if(entity.HasType<T1>() && entity.HasType<T2>())
+          function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
+    }
+}
+
+template<typename T, typename Func>
+void EntityList::ParallelForEach(Func function)
+{
+#pragma omp parallel for schedule(static) shared(function) default(none)
+  for(int i = 0; i < entities_.size(); ++ i)
+  {
+      Entity& entity = entities_[i];
+
+      if(entity.HasType<T>())
+        function(entity.GetComponent<T>());
+  }
+}
+
+template<typename Func>
+void EntityList::ParallelForEach(Func function)
+{
+#pragma omp parallel for schedule(static) shared(function) default(none)
+  for(int i = 0; i < entities_.size(); ++ i)
+  {
+        function(entities_[i]);
+  }
+}
+
 
 
 #endif //GIGAENGINE_ENTITYLIST_H

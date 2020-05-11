@@ -103,14 +103,15 @@ void Graphics::Init()
 
 void Graphics::Update()
 {
-    // render loop
-    // -----------
-    for (int i = 0; i < 2000; i++)
+    //creates entities and adds components to them for use in a game
+    //TODO: Create Archetypes to avoid doing this every time
+    //TODO: Create ArchetypeManager to save all archetypes in a file
+    for (int i = 0; i < 1000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
         Translation& t = ent.AddComponent<Translation>();
-        t.value = glm::vec3(i%10 - 5, i/10 - 5, (1000-i)/1000.0f);
+        t.value = glm::vec3(i%100 - 25, i/100 , 0);
         ent.AddComponent<Rotation>();
         ent.AddComponent<UniformScale>();
         Renderer& rend = ent.AddComponent<Renderer>();
@@ -121,6 +122,8 @@ void Graphics::Update()
     MatrixSystem m_system;
     RenderSystem r_system;
     RotateTestSystem rot_system;
+
+
     while (!glfwWindowShouldClose(window_))
     {
 
@@ -130,7 +133,7 @@ void Graphics::Update()
         float timer = glfwGetTime();
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime()* 2), 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         rot_system.Update();
@@ -198,4 +201,6 @@ void processInput(GLFWwindow *window)
     // Show triangles normally
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
 }

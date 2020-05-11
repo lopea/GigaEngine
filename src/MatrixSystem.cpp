@@ -21,7 +21,7 @@ const glm::vec3 rotateAxis = glm::vec3(0, 0, 1);
 
 void MatrixSystem::Update()
 {
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix>
+    EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix>
             ([](LocalToWorldMatrix &matrix)
              {
                  matrix.value = glm::identity<glm::mat4x4>();
@@ -29,15 +29,14 @@ void MatrixSystem::Update()
              });
 
     //update the translation, first
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Translation>
+    EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix, Translation>
             ([](LocalToWorldMatrix &matrix, Translation &trans)
              {
-
                  matrix.value = glm::translate(matrix.value, trans.value);
              });
 
     //update the rotation
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Rotation>
+    EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix, Rotation>
             ([](LocalToWorldMatrix &matrix, Rotation &rotation)
              {
                  matrix.value = glm::rotate(matrix.value,
@@ -46,7 +45,7 @@ void MatrixSystem::Update()
              });
 
     //update the scale
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, Scale>
+    EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix, Scale>
             ([](LocalToWorldMatrix &matrix, Scale &scale)
              {
                  matrix.value = glm::scale(matrix.value, scale.value);
@@ -54,7 +53,7 @@ void MatrixSystem::Update()
 
 
     //update the scale for uniform scales only
-    EntityManager::GetEntities().ForEach<LocalToWorldMatrix, UniformScale>
+    EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix, UniformScale>
             ([](LocalToWorldMatrix& matrix, UniformScale& scale)
             {
                 matrix.value[0].x *= scale.value;

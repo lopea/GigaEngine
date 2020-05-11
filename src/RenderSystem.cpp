@@ -20,10 +20,9 @@ void RenderSystem::Update()
     EntityManager::GetEntities().ForEach<Renderer,LocalToWorldMatrix>
             ([](Renderer& renderer, LocalToWorldMatrix& matrix)
             {
+                //zoom value, scales and translates the object automatically when multiplied in the shader
+                matrix.value[3][3] = glm::sin(glfwGetTime() * 0.05f) * 200 ;
 
-                //glBindVertexArray(renderer.shader.VBO_);
-
-                matrix.value[3][3] = 3;
                 //Bind the matrix to the shader
                 glUniformMatrix4fv(glGetUniformLocation(renderer.shader.ID_, "MVP"), 1, GL_FALSE, glm::value_ptr(matrix.value));
 

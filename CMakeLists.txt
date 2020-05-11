@@ -5,7 +5,7 @@ project(GigaEngine)
 
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-mavx2")
+set(CMAKE_CXX_FLAGS "-mavx2 -fopenmp")
 
 # Adding all the Directories for linking
 
@@ -60,8 +60,10 @@ set(Giga_SOURCES
 
 include_directories(lib/rttr/include)
 
+
+
 # Making executable
 add_executable(${PROJECT_NAME} ${Giga_ENGINE_SOURCES} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY})
+target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY} )
