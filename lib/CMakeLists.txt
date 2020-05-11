@@ -1,8 +1,0 @@
-add_subdirectory(glad)
-add_subdirectory(glfw-3.3.2)
-add_subdirectory(glm)
-add_subdirectory(rttr)
-# rttr is a bitch and needs to be pre-compiled
-
-#add_subdirectory(cereal-master)
-#add_subdirectory(imgui-master)
