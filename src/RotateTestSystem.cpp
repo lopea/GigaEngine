@@ -10,8 +10,8 @@
 
 void RotateTestSystem::Update()
 {
-    float time =  glfwGetTime() ;
-    EntityManager::GetEntities().ForEach
+    float time =  glfwGetTime();
+    EntityManager::GetEntities().ParallelForEach
             ([time](Entity& entity)
             {
                 Rotation& rot = entity.GetComponent<Rotation>();

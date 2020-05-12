@@ -106,7 +106,7 @@ void Graphics::Update()
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 5000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();

@@ -66,4 +66,4 @@ include_directories(lib/rttr/include)
 add_executable(${PROJECT_NAME} ${Giga_ENGINE_SOURCES} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY} )
+target_link_libraries(${PROJECT_NAME} glad glfw rttr_core)
