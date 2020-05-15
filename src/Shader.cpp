@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cmath>
+
 #include "Shader.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -41,6 +42,10 @@ void Shader::setColor(const std::string &name, float red, float green, float blu
   glUniform3f(glGetUniformLocation(ID_, name.c_str()), red, green, blue);
 }
 
+void Shader::setMatrix4x4(const std::string &name, const glm::mat4 &value) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(ID_,name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
 void Shader::SetUp(const char* vertexPath, const char* fragmentPath)
 {
     if(!vertexPath || !fragmentPath)
@@ -73,7 +78,7 @@ void Shader::SetUp(const char* vertexPath, const char* fragmentPath)
     }
     catch(std::ifstream::failure& e)
     {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
     }
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
@@ -94,7 +99,7 @@ void Shader::SetUp(const char* vertexPath, const char* fragmentPath)
     glCompileShader(fragment);
     checkCompileErrors(vertex, "FRAGMENT");
 
-    glGetUniformLocation(matrix_location, "MVP");
+
     // shader Program
     ID_ = glCreateProgram();
     glAttachShader(ID_, vertex);
@@ -114,6 +119,8 @@ void Shader::Clear()
     glDeleteBuffers(1, &VBO_);
     glDeleteProgram(ID_);
 }
+
+
 
 //Private functions:
 //------------------

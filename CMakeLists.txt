@@ -5,10 +5,14 @@ project(GigaEngine)
 
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_CXX_FLAGS "-mavx2 -fopenmp")
 
-# Adding all the Directories for linking
 
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_definitions(-Ofast)
+endif()
 
 # Adding rttr includes as adding them to the subdirectory does nothing
 
@@ -31,7 +35,7 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Entity/Entity.h
         src/Engine/Systems/SystemBase.h
         src/Engine/Systems/SystemBase.cpp
-        src/Engine/Engine.cpp src/Engine/Engine.h)
+        src/Engine/Engine.cpp src/Engine/Engine.h src/Engine/Math.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES
@@ -58,7 +62,7 @@ set(Giga_SOURCES
         src/RotateTestSystem.cpp
         src/RotateTestSystem.h src/UniformScale.h)
 
-include_directories(lib/rttr/include)
+
 
 
 

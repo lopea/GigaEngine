@@ -111,7 +111,7 @@ void Graphics::Update()
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
         Translation& t = ent.AddComponent<Translation>();
-        t.value = glm::vec3(i%100 - 25, i/100 , 0);
+        t.value = glm::vec3(i%100 - 25, i/100 ,  0);
         ent.AddComponent<Rotation>();
         ent.AddComponent<UniformScale>();
         Renderer& rend = ent.AddComponent<Renderer>();

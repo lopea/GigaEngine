@@ -1,13 +1,8 @@
 //
 // Created by javier on 5/5/2020.
 //
-#if __AVX2__
-#define GLM_FORCE_AVX2
-#define GLM_FORCE_ALIGNED
-#endif
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
 
+#include "Engine/Math.h"
 #include <GLFW/glfw3.h>
 #include "MatrixSystem.h"
 #include "Engine/Entity/EntityManager.h"
@@ -17,10 +12,17 @@
 #include "Translation.h"
 #include "UniformScale.h"
 
+//the axis in which 2D objects will rotate
 const glm::vec3 rotateAxis = glm::vec3(0, 0, 1);
+
+//This system will update all the matrices based on the position, rotation, and scale
+//each system will update individually as not all entities will contain all these components
+
+//FIXME: This is ultra inefficient, all the matrices get updated regardless of movement
 
 void MatrixSystem::Update()
 {
+    //Set all matrices to the identity matrix
     EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix>
             ([](LocalToWorldMatrix &matrix)
              {
@@ -28,11 +30,12 @@ void MatrixSystem::Update()
 
              });
 
-    //update the translation, first
+    //update the translation of the entity, first
     EntityManager::GetEntities().ParallelForEach<LocalToWorldMatrix, Translation>
             ([](LocalToWorldMatrix &matrix, Translation &trans)
              {
                  matrix.value = glm::translate(matrix.value, trans.value);
+
              });
 
     //update the rotation
@@ -61,7 +64,5 @@ void MatrixSystem::Update()
                 matrix.value[2].z *= scale.value;
 
             });
-
-
 
 }

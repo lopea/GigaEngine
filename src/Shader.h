@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "Engine/Math.h"
 
 class Shader
 {
@@ -16,8 +17,7 @@ public:
   unsigned int VBO_;
   unsigned int VAO_;
   unsigned int EBO_;
-  //TODO: Add a more robust system (adding more than just a matrix)
-  int matrix_location;
+
   bool setup;
 
   // constructor reads and builds the shader
@@ -31,6 +31,7 @@ public:
   void setInt(const std::string &name, int value) const;
   void setFloat(const std::string &name, float value) const;
   void setColor(const std::string &name, float red, float green, float blue) const;
+  void setMatrix4x4(const std::string &name,const glm::mat4 &value) const;
   void SetUp(const char* vertexPath, const char* fragmentPath);
   void Clear();
 };

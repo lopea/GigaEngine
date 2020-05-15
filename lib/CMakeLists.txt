@@ -15,6 +15,7 @@ else()
     #lol funny man trying to use MacOS
     message("-- Have Fun! --")
 endif()
+include_directories(rttr/include)
 
 #add_subdirectory(cereal-master)
 #add_subdirectory(imgui-master)
