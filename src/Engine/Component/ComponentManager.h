@@ -58,7 +58,7 @@ template<typename T>
     }
 
     //nothing has been found, throw exeption
-    throw ComponentNotFoundExeption(t);
+    throw ComponentNotFoundException(t);
 }
 
 template<typename T>

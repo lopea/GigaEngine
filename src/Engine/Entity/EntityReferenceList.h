@@ -143,7 +143,7 @@ void ReferenceEntityList::ForEach(Func function)
     {
       function(reference->GetComponent<T1>(), reference->GetComponent<T2>());
     }
-    catch (ComponentNotFoundExeption &e)
+    catch (ComponentNotFoundException &e)
     {}
   }
 }

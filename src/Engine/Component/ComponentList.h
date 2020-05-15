@@ -62,7 +62,7 @@ T& ComponentList<T>::GetComponent(Entity entity)
     }
 
     // nothing was found, throw an exception
-    throw ComponentNotFoundExeption(rttr::type::get<T>());
+    throw ComponentNotFoundException(rttr::type::get<T>());
 
 }
 

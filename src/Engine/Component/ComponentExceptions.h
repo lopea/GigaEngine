@@ -11,12 +11,12 @@
 /*!
  * Custom Exception that gets thrown when the component cannot find component with the entity given.
  */
-class ComponentNotFoundExeption : public std::exception
+class ComponentNotFoundException : public std::exception
 {
 public:
-    inline explicit ComponentNotFoundExeption(const rttr::type& type) : std::exception(), type_(type){} //!< constructor for the exception
+    inline explicit ComponentNotFoundException(const rttr::type& type) : std::exception(), type_(type){} //!< constructor for the exception
     rttr::type type_; //!< the type of component that caused the exeption
-    ComponentNotFoundExeption() = delete;
+    ComponentNotFoundException() = delete;
 };
 
 /*!

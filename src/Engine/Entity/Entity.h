@@ -9,6 +9,13 @@
 #include "../Component/ComponentManager.h"
 #include <rttr/type>
 
+/*!
+ * Get the component that is part of this entity based on its type
+ * @tparam T Type of component to find in the entity
+ * @return Reference to the component of type T that is part of the
+ *         entity. if no component is found, the function throws a
+ *         ComponentNotFoundException
+ */
 template<typename T>
 T& Entity::GetComponent ()
 {
@@ -17,10 +24,19 @@ T& Entity::GetComponent ()
     if(it != components_.end())
         return *static_cast<T*>(it->second);
 
-    throw ComponentNotFoundExeption(rttr::type::get<T>());
+    throw ComponentNotFoundException(rttr::type::get<T>());
     //return ComponentManager::GetComponent<T>(*this);
 }
 
+/*!
+ * Add a component to the entity of a certain type.<br> The function will
+ * do nothing if a component of the same type already exists in the
+ * entity.
+ * @tparam T The type of component to add to this entity
+ * @return Reference to a new component of type T that corresponds
+ *         to this entity. if a component of type T already exists,
+ *         then the function will return a reference to that component.
+ */
 template<typename T>
 T &Entity::AddComponent ()
 {
@@ -35,6 +51,12 @@ T &Entity::AddComponent ()
     return *static_cast<T*>(&res);
 }
 
+/*!
+ * Check if a component of type T already exists in this entity.
+ * @tparam T The type to find
+ * @return True if a component of type T exists in the entity, false
+ * otherwise
+ */
 template<typename T>
 bool Entity::HasType() const
 {
