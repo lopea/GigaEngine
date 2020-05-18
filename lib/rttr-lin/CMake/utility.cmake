@@ -369,7 +369,7 @@ function(activate_precompiled_headers _PRECOMPILED_HEADER _SOURCE_FILES)
     set_source_files_properties(${pch_unity}
                                 PROPERTIES COMPILE_FLAGS "/Yc\"${pch_abs}\" /Fp\"${pch_bin}\""
                                            OBJECT_OUTPUTS "${pch_bin}")
-    # Update properties of source files to use the precompiled header.
+    # Run properties of source files to use the precompiled header.
     # Additionally, force the inclusion of the precompiled header at beginning of each source file.
     set_source_files_properties(${SRC_FILES}
                                 PROPERTIES COMPILE_FLAGS "/Yu\"${pch_abs}\" /FI\"${pch_abs}\" /Fp\"${pch_bin}\""

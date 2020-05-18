@@ -1,14 +1,9 @@
 #include "Graphics.h"
+#include "Engine/Engine.h"
+
 int main()
 {
-    Graphics openGl;
-
-    openGl.Init();
-
-
-    openGl.Update();
-
-    openGl.Close();
-
+    Engine::Initialize();
+    Engine::Run();
     return 0;
 }

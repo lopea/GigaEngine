@@ -1,24 +1,46 @@
 //
-// Created by lopea on 5/16/20.
+// Created by Javier on 5/16/20.
 //
 
 #ifndef GIGAENGINE_SCREEN_H
 #define GIGAENGINE_SCREEN_H
 
-#include <GLFW/glfw3.h>
 
+typedef struct GLFWwindow GLFWwindow;
+
+enum class ScreenType
+{
+    Windowed,
+    Fullscreen,
+    BorderlessWindowed
+};
 
 class Screen
 {
-    bool ShouldClose();
-
-    void Close();
-
     GLFWwindow *GetWindowHandle();
 
+    ScreenType GetScreenType() const;
+
+    float GetWidth() const;
+
+    float GetHeight() const;
+
+    float ChangeWindowSize(unsigned int newWidth, unsigned int newHeight);
+
+    float ChangeWindowType(const ScreenType type);
+
+    float GetRatio() const;
 
 private:
-    GLFWwindow *glfwHandle;
+    friend class Engine;
+
+    GLFWwindow *glfwHandle_;
+    ScreenType type_;
+    unsigned int resX_;
+    unsigned int resY_;
+
+    Screen(int resX, int resY, ScreenType type);
+    Screen() = default;
 };
 
 

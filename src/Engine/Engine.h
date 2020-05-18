@@ -6,10 +6,27 @@
 #define GIGAENGINE_ENGINE_H
 
 
+#include "Screen.h"
+
 class Engine
 {
+public:
+    static void Initialize();
+    static Screen GetScreen();
 
+    static void Run();
+
+    static void ShutDown();
+
+private:
+    Screen currentScreen_;
+
+    static bool running_;
+    static bool init_;
+    static Engine current_;
 };
+
+
 
 
 #endif //GIGAENGINE_ENGINE_H

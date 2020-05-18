@@ -132,6 +132,7 @@ void Graphics::Update()
         // -----
         processInput(window_);
         float timer = glfwGetTime();
+
         // render
         // ------
         glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime()* 2), 1.0f);

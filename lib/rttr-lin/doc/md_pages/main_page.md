@@ -42,7 +42,7 @@ RTTR supports:
 Portability
 -----------
 RTTR is compiled and tested on following platforms:
-- Microsoft Visual Studio 12 (2013), Update 4 - x32 and x64
+- Microsoft Visual Studio 12 (2013), Run 4 - x32 and x64
 - gcc 4.8.1 - x32 and x64
 
 Content

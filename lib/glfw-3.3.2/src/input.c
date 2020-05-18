@@ -722,7 +722,7 @@ GLFWAPI void glfwSetCursorPos(GLFWwindow* handle, double xpos, double ypos)
     }
     else
     {
-        // Update system cursor position
+        // Run system cursor position
         _glfwPlatformSetCursorPos(window, xpos, ypos);
     }
 }
