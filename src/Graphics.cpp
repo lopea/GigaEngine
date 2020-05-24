@@ -64,40 +64,7 @@ void Graphics::Init()
         return;
     }
 
-    shader_ = Shader("../src/Shaders/shader.vs", "../src/Shaders/shader.fs");
 
-    float vertices[] = {
-            // positions         // colors
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // top
-    };
-
-    unsigned int indices[] = {  // note that we start from 0!
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
-    };
-
-    // Initializing all buffers
-    //-------------------------
-    glGenVertexArrays(1, &shader_.VAO_);
-    glGenBuffers(1, &shader_.VBO_);
-    glGenBuffers(1, &shader_.EBO_);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(shader_.VAO_);
-
-    glBindBuffer(GL_ARRAY_BUFFER, shader_.VBO_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shader_.EBO_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) 0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
 
 }
 
@@ -107,18 +74,6 @@ void Graphics::Update()
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
 
-    for (int i = 0; i < 5000; i++)
-    {
-        Entity &ent = EntityManager::AddEntity();
-        //ent.AddComponent<ComponentTest>();
-        Translation& t = ent.AddComponent<Translation>();
-        t.value = glm::vec3(i%100 - 25, i/100 ,  10);
-        ent.AddComponent<Rotation>();
-        ent.AddComponent<UniformScale>();
-        Renderer& rend = ent.AddComponent<Renderer>();
-        rend.shader = shader_;
-        ent.AddComponent<LocalToWorldMatrix>();
-    }
 
     MatrixSystem m_system;
     RenderSystem r_system;
@@ -138,9 +93,9 @@ void Graphics::Update()
         glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime()* 2), 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        rot_system.Update();
-        m_system.Update();
-        r_system.Update();
+        //rot_system.Update();
+        //m_system.Update();
+        //r_system.Update();
         // Shader used to render triangles
 
         float timeValue = glfwGetTime();

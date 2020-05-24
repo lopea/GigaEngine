@@ -18,11 +18,11 @@ endif()
 
 add_subdirectory(lib)
 include_directories(lib/glm)
+include_directories(lib/rttr/include)
 
 set(Giga_ENGINE_SOURCES
         src/Engine/Component/ComponentTest.h
         src/Engine/Component/ComponentManager.h
-        src/Engine/Component/ComponentManager.cpp
         src/Engine/Component/ComponentList.h
         src/Engine/Component/ComponentExceptions.h
         src/Engine/Component/Component.h
@@ -30,9 +30,6 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Entity/EntityManager.h
         src/Engine/Entity/EntityList.h
         src/Engine/Entity/EntityList.cpp
-        src/Engine/Entity/EntityBase.h
-        src/Engine/Entity/EntityBase.cpp
-        src/Engine/Entity/Entity.h
         src/Engine/Systems/SystemBase.h
         src/Engine/Engine.cpp src/Engine/Engine.h src/Engine/Math.h src/Engine/Screen.cpp src/Engine/Screen.h)
 
@@ -56,10 +53,8 @@ set(Giga_SOURCES
         src/Renderer.h
         src/RenderSystem.cpp
         src/RenderSystem.h
-        src/Engine/Entity/EntityReferenceList.cpp
-        src/Engine/Entity/EntityReferenceList.h
         src/RotateTestSystem.cpp
-        src/RotateTestSystem.h src/UniformScale.h)
+        src/RotateTestSystem.h src/UniformScale.h src/Camera.cpp src/Camera.h)
 
 
 
@@ -69,4 +64,4 @@ set(Giga_SOURCES
 add_executable(${PROJECT_NAME} ${Giga_ENGINE_SOURCES} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw rttr_core)
+target_link_libraries(${PROJECT_NAME} glad glfw ${RTTR_LIBRARY})

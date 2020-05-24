@@ -5,8 +5,9 @@
 #ifndef _ENTITYMANAGER_H_
 #define _ENTITYMANAGER_H_
 #include <vector>
-#include "EntityBase.h"
 #include "EntityList.h"
+
+typedef uint64_t Entity;
 
 class EntityManager {
  public:

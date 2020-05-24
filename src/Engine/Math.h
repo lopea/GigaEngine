@@ -14,4 +14,5 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <ext.hpp>
+#include <cmath>
 #endif //GIGAENGINE_MATH_H

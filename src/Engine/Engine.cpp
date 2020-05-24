@@ -3,7 +3,6 @@
 //
 
 #include "Engine.h"
-#include "Entity/Entity.h"
 #include "Entity/EntityManager.h"
 #include "../Translation.h"
 #include "../UniformScale.h"
@@ -20,91 +19,137 @@ bool Engine::init_ = false;
 Engine Engine::current_;
 bool Engine::running_ = false;
 
+Shader shader_;
+
 void Engine::Initialize()
 {
-  //Engine is already initialized
-  if(init_) { return;}
+    //Engine is already initialized
+    if (init_)
+    { return; }
 
-  if(!glfwInit())
-    return;
+    if (!glfwInit())
+        return;
 
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, false);
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+    //setup the screen
+    current_.currentScreen_ = Screen(1280, 720, ScreenType::Windowed);
+    glfwMakeContextCurrent(current_.currentScreen_.glfwHandle_);
+    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+    //setup variables
+    init_ = true;
+    running_ = true;
 
-  //setup the screen
-  current_.currentScreen_ = Screen(600, 800, ScreenType::Windowed);
-  glfwMakeContextCurrent(current_.currentScreen_.glfwHandle_);
-  gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-  //setup variables
-  init_ = true;
-  running_ = true;
+    shader_ = Shader("../src/Shaders/shader.vs", "../src/Shaders/shader.fs");
+
+    float vertices[] = {
+            // positions         // colors
+            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
+            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // top
+    };
+
+    unsigned int indices[] = {  // note that we start from 0!
+            0, 1, 3,   // first triangle
+            1, 2, 3    // second triangle
+    };
+
+    // Initializing all buffers
+    //-------------------------
+    glGenVertexArrays(1, &shader_.VAO_);
+    glGenBuffers(1, &shader_.VBO_);
+    glGenBuffers(1, &shader_.EBO_);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(shader_.VAO_);
+
+    glBindBuffer(GL_ARRAY_BUFFER, shader_.VBO_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shader_.EBO_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glUseProgram(shader_.ID_);
 }
 
 void Engine::Run()
 {
-  //creates entities and adds components to them for use in a game
-  //TODO: Create Archetypes to avoid doing this every time
-  //TODO: Create ArchetypeManager to save all archetypes in a file
+    //creates entities and adds components to them for use in a game
+    //TODO: Create Archetypes to avoid doing this every time
+    //TODO: Create ArchetypeManager to save all archetypes in a file
 
-  for (int i = 0; i < 5000; i++)
-  {
-    Entity &ent = EntityManager::AddEntity();
-    //ent.AddComponent<ComponentTest>();
-    Translation& t = ent.AddComponent<Translation>();
-    t.value = glm::vec3(i%100 - 25, i/100 ,  10);
-    ent.AddComponent<Rotation>();
-    ent.AddComponent<UniformScale>();
-    Renderer& rend = ent.AddComponent<Renderer>();
-    ent.AddComponent<LocalToWorldMatrix>();
-  }
-
-  MatrixSystem m_system;
-  RenderSystem r_system;
-  RotateTestSystem rot_system;
-
-
-
-  //check if the engine is still running
-  while(running_)
-  {
-    if(glfwWindowShouldClose(current_.currentScreen_.GetWindowHandle()))
+    for (int i = 0; i < 1000; i++)
     {
-      running_ = false;
+        Entity &ent = EntityManager::AddEntity();
+        //ent.AddComponent<ComponentTest>();
+        Translation *t = ComponentManager::AddComponent<Translation>(ent);
+        t->value = glm::vec3(i % 100 - 25, i / 100, 0);
+        ComponentManager::AddComponent<Rotation>(ent);
+        ComponentManager::AddComponent<UniformScale>(ent);
+        Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
+        rend->shader = shader_;
+        ComponentManager::AddComponent<LocalToWorldMatrix>(ent);
     }
-    float timer = glfwGetTime();
 
-    // render
-    // ------
-    glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime()* 2), 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    MatrixSystem m_system;
+    RenderSystem r_system;
+    RotateTestSystem rot_system;
 
-    rot_system.Update();
-    m_system.Update();
-    r_system.Update();
-    // Shader used to render triangles
+    //check if the engine is still running
+    while (running_)
+    {
+        if (glfwWindowShouldClose(current_.currentScreen_.GetWindowHandle()))
+        {
+            running_ = false;
+        }
+        float timer = glfwGetTime();
 
-    float timeValue = glfwGetTime();
-    float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
-    float x = (tanf(timeValue) / 2.0f) + 0.1f;
+        glViewport(0, 0, GetScreen().GetWidth(), GetScreen().GetHeight());
+        // render
+        // ------
+        glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime() * 2), 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-    //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
-    //shader.setFloat("xOffset", x);
 
-    // Used to draw a single triangle
+        rot_system.Update();
+        m_system.Update();
+        r_system.Update();
+        // Shader used to render triangles
 
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
-    glfwSwapBuffers(Engine::GetScreen().glfwHandle_);
-    glfwPollEvents();
-    std::cout << 1/(glfwGetTime() - timer) << std::endl; //frame rate
-  }
+        float timeValue = glfwGetTime();
+        float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
+        float x = (tanf(timeValue) / 2.0f) + 0.1f;
+
+        //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
+        //shader.setFloat("xOffset", x);
+
+        // Used to draw a single triangle
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(Engine::GetScreen().glfwHandle_);
+        glfwPollEvents();
+
+        if (abs(fmod(glfwGetTime(), 0.2)) < 0.01)
+        {
+            std::string s = "Fps: ";
+            s += std::to_string(1 / (glfwGetTime() - timer));
+            glfwSetWindowTitle(GetScreen().GetWindowHandle(), s.c_str());
+        }
+
+    }
 }
 
 Screen Engine::GetScreen()
 {
-  return current_.currentScreen_;
+    return current_.currentScreen_;
 }

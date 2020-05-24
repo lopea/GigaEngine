@@ -6,11 +6,13 @@
 #define GIGAENGINE_ENTITYLIST_H
 
 
-#include "Entity.h"
-#include "EntityReferenceList.h"
+
+#include "../Component/ComponentManager.h"
 #include <omp.h>
 #include <vector>
 #include <algorithm>
+
+typedef uint64_t Entity;
 
 class EntityList
 {
@@ -25,16 +27,16 @@ public:
     void ForEach(Func function);
 
     template<typename T>
-    ReferenceEntityList OfType();
+    EntityList OfType();
 
     template<typename T1, typename T2>
-    ReferenceEntityList OfTypes();
+    EntityList OfTypes();
 
     template<typename T>
-    ReferenceEntityList ExcludeType();
+    EntityList ExcludeType();
 
     template<typename T1, typename T2>
-    ReferenceEntityList ExcludeTypes();
+    EntityList ExcludeTypes();
 
     template<typename T1, typename T2, typename Func>
     void ParallelForEach(Func function);
@@ -61,6 +63,32 @@ private:
 };
 
 /*!
+ * EntityList Conversion Constructor, convert a vector of entities to a EntityList
+ * @param entity the vector of entities to add to a list
+ */
+inline EntityList::EntityList(std::vector<Entity> &entity) : entities_(entity)
+{}
+
+/*!
+ * Gets the last entity in the list, for internal use only
+ * @return the last entity in the list
+ */
+inline Entity &EntityList::back()
+{
+    return entities_.back();
+}
+
+/*!
+ * Adds a new entity to the list, for internal use only
+ * @param entity the entity to add to the list
+ */
+inline void EntityList::Add(Entity entity)
+{
+    entities_.push_back(entity);
+}
+
+
+/*!
  * Goes through all the entities in this list and calls the function given.
  * @tparam Func Represents the type of function that gets called on all the entities in the list.<br>
  *              Function must contain an Entity reference parameter and return nothing.<br>
@@ -70,12 +98,12 @@ private:
 template<typename Func>
 void EntityList::ForEach(Func function)
 {
-  //go through all entities
-  for (auto &entity : entities_)
-  {
-    //execute the function given
-    function(entity);
-  }
+    //go through all entities
+    for (auto &entity : entities_)
+    {
+        //execute the function given
+        function(entity);
+    }
 }
 
 /*!
@@ -90,17 +118,28 @@ void EntityList::ForEach(Func function)
 template<typename T, typename Func>
 void EntityList::ForEach(Func function)
 {
-  //for every entity in the list,
-  for (Entity &entity : entities_)
-  {
+    //get the list of components of type T
+    ComponentList<T>* list = ComponentManager::GetList<T>();
 
-    //if the entity has a component of type T,
-    if (entity.HasType<T>())
+    //if the list exists
+    if(list)
     {
-      //execute the function with the type given.
-      function(entity.GetComponent<T>());
+        //get all entities that are inside the list
+        std::vector<Entity> ents = list->GetOverlappingEntities(entities_);
+
+        //for every entity in the list,
+        for (Entity entity : ents)
+        {
+            //get the component
+            T *comp = ComponentManager::GetComponent<T>(entity);
+
+            //call the function on the component
+            if (comp)
+            {
+                function(*comp);
+            }
+        }
     }
-  }
 }
 
 /*!
@@ -110,21 +149,25 @@ void EntityList::ForEach(Func function)
  * @return a list containing all entities with components of the types given.
  */
 template<typename T1, typename T2>
-ReferenceEntityList EntityList::OfTypes()
+EntityList EntityList::OfTypes()
 {
-  //store the new list of references to types
-  std::vector<Entity *> lit;
+    //store the new list of references to types
+    std::vector<Entity> list;
 
-  //go through each entity in the list,
-  for (auto &it : entities_)
-  {
-    //if the current entity has both types, add it to the list
-    if (it.HasType<T1>() && it.HasType<T2>())
-      lit.push_back(&it);
-  }
+    //get reference of all components of both types
+    ComponentList<T1>* list1 = ComponentManager::GetList<T1>();
+    ComponentList<T2>* list2 = ComponentManager::GetList<T2>();
 
-  //create a new list and ship it.
-  return ReferenceEntityList(lit);
+    //if they both exist
+    if(list1 && list2)
+    {
+        std::vector<Entity> ent1 = list1->GetAllEnities();
+        std::vector<Entity> ent2 = list2->GetAllEnities();
+
+
+    }
+
+    return EntityList();
 }
 
 /*!
@@ -133,16 +176,9 @@ ReferenceEntityList EntityList::OfTypes()
  * @return A list with all entities that contain a component of type T
  */
 template<typename T>
-ReferenceEntityList EntityList::OfType()
+EntityList EntityList::OfType()
 {
-  //store new list of references to types
-  std::vector<Entity *> lit;
-  for (auto &it : entities_)
-  {
-    if (it.HasType<T>())
-      lit.push_back(&it);
-  }
-  return ReferenceEntityList(lit);
+    return EntityList();
 }
 
 /*!
@@ -151,15 +187,10 @@ ReferenceEntityList EntityList::OfType()
  * @return A new list that contains all the entities in this list that do not contain the component type given.
  */
 template<typename T>
-ReferenceEntityList EntityList::ExcludeType()
+EntityList EntityList::ExcludeType()
 {
-  std::vector<Entity *> lit;
-  for (auto &it : entities_)
-  {
-    if (!it.HasType<T>())
-      lit.push_back(&it);
-  }
-  return ReferenceEntityList(lit);
+    return EntityList();
+
 }
 
 /*!
@@ -169,22 +200,9 @@ ReferenceEntityList EntityList::ExcludeType()
  * @return A new list of entities that do not contain 2 different types of components.
  */
 template<typename T1, typename T2>
-ReferenceEntityList EntityList::ExcludeTypes()
+EntityList EntityList::ExcludeTypes()
 {
-  //store the new list of references to types
-  std::vector<Entity *> lit;
-
-  //go through each entity in the list,
-  for (auto &it : entities_)
-  {
-    //if the current entity does not have both types, add it to the list
-    if (!it.HasType<T1>() && !it.HasType<T2>())
-      lit.push_back(&it);
-  }
-
-  //create a new list and ship it.
-  return ReferenceEntityList(lit);
-
+    return EntityList();
 }
 
 /*!
@@ -200,12 +218,25 @@ ReferenceEntityList EntityList::ExcludeTypes()
 template<typename T1, typename T2, typename Func>
 void EntityList::ForEach(Func function)
 {
+    ComponentList<T1>* list1 = ComponentManager::GetList<T1>();
+    ComponentList<T2>* list2 = ComponentManager::GetList<T2>();
 
-  for (auto &entity : entities_)
-  {
-    if (entity.HasType<T1>() && entity.HasType<T2>())
-      function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
-  }
+    if(!list1 || !list2)
+        return;
+
+    std::vector<Entity> ent2 = list2->GetOverlappingEntities(entities_);
+    std::vector<Entity> ents = list1->GetOverlappingEntities(ent2);
+
+    for (auto &entity : ents)
+    {
+        T1* comp1 = list1->GetComponent(entity);
+        T2* comp2 = list2->GetComponent(entity);
+
+        if(comp1 && comp2)
+        {
+            function(*comp1, *comp2);
+        }
+    }
 }
 
 /*!
@@ -222,15 +253,31 @@ void EntityList::ForEach(Func function)
 template<typename T1, typename T2, typename Func>
 void EntityList::ParallelForEach(Func function)
 {
-#pragma omp parallel for schedule(static) shared(function) default(none)
-  for (int i = 0; i < entities_.size(); ++i)
-  {
-    Entity &entity = entities_[i];
+    ComponentList<T1>* list1 = ComponentManager::GetList<T1>();
+    ComponentList<T2>* list2 = ComponentManager::GetList<T2>();
 
-    //this is pretty bad but idk at this point its really fast
-    if (entity.HasType<T1>() && entity.HasType<T2>())
-      function(entity.GetComponent<T1>(), entity.GetComponent<T2>());
-  }
+    if(!list1 || !list2)
+        return;
+
+    std::vector<Entity> ent2 = list2->GetOverlappingEntities(entities_);
+    std::vector<Entity> ents = list1->GetOverlappingEntities(ent2);
+
+    if(ents.empty())
+        return;
+
+    #pragma omp parallel for schedule(static) shared(function, list1, list2, ents) default(none)
+    for (int i = 0; i < ents.size(); ++i)
+    {
+        Entity entity = ents[i];
+
+        T1* comp1 = list1->GetComponent(entity);
+        T2* comp2 = list2->GetComponent(entity);
+
+        if(comp1 && comp2)
+        {
+            function(*comp1,*comp2);
+        }
+    }
 }
 
 /*!
@@ -246,14 +293,22 @@ void EntityList::ParallelForEach(Func function)
 template<typename T, typename Func>
 void EntityList::ParallelForEach(Func function)
 {
-#pragma omp parallel for schedule(static) shared(function) default(none)
-  for (int i = 0; i < entities_.size(); ++i)
-  {
-    Entity &entity = entities_[i];
+    ComponentList<T>* list = ComponentManager::GetList<T>();
+    if(list)
+    {
+        #pragma omp parallel for schedule(static) shared(function,list) default(none)
+        for (int i = 0; i < entities_.size(); ++i)
+        {
+            Entity entity = entities_[i];
 
-    if (entity.HasType<T>())
-      function(entity.GetComponent<T>());
-  }
+            T *comp = list->GetComponent(entity);
+
+            if (comp)
+            {
+                function(*comp);
+            }
+        }
+    }
 }
 
 /*!
@@ -267,11 +322,11 @@ void EntityList::ParallelForEach(Func function)
 template<typename Func>
 void EntityList::ParallelForEach(Func function)
 {
-#pragma omp parallel for schedule(static) shared(function) default(none)
-  for (int i = 0; i < entities_.size(); ++i)
-  {
-    function(entities_[i]);
-  }
+    #pragma omp parallel for schedule(static) shared(function) default(none)
+    for (int i = 0; i < entities_.size(); ++i)
+    {
+        function(entities_[i]);
+    }
 }
 
 

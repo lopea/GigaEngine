@@ -10,29 +10,45 @@
 #include "ComponentList.h"
 #include "Component.h"
 
+
+typedef uint64_t Entity;
+
 class ComponentManager
 {
 public:
-    static void Initialize();
+    static void Initialize()
+    {
+        Init_ = true;
+    }
 
-    static void Shutdown();
+    static void Shutdown()
+    {
+        Init_ = false;
+    }
 
     template<typename T>
-    static T& GetComponent(Entity& entity);
+    static T *GetComponent(Entity entity);
 
     template<typename T>
-    static T& AddComponent(Entity& entity);
+    static T *AddComponent(Entity entity);
 
 private:
-    ComponentManager() = default;
+    friend class EntityList;
 
+    template<typename T>
+    static ComponentList<T>* GetList();
+
+    ComponentManager() = default;
     static ComponentManager manager_;
     std::unordered_map<rttr::type, GenericComponentList *> lists_;
     static bool Init_;
 };
 
+inline ComponentManager ComponentManager::manager_;
+inline bool ComponentManager::Init_ = false;
+
 template<typename T>
- T& ComponentManager::GetComponent(Entity& entity)
+T *ComponentManager::GetComponent(Entity entity)
 {
     //get the type of the component
     rttr::type t = rttr::type::get<T>();
@@ -41,7 +57,7 @@ template<typename T>
     if (!t.is_derived_from<Component>())
     {
         //throw exception
-       throw TypeNotComponentException(t);
+        throw TypeNotComponentException(t);
     }
 
     //find the list corresponding to the type
@@ -58,11 +74,11 @@ template<typename T>
     }
 
     //nothing has been found, throw exeption
-    throw ComponentNotFoundException(t);
+    return nullptr;
 }
 
 template<typename T>
- T &ComponentManager::AddComponent(Entity& entity)
+T *ComponentManager::AddComponent(Entity entity)
 {
     //get the type of T
     rttr::type t = rttr::type::get<T>();
@@ -70,7 +86,7 @@ template<typename T>
     //check if the type is valid
     if (!t.is_derived_from<Component>())
     {
-        //TODO: Throw "type not a component" exception
+        throw TypeNotComponentException(t);
     }
 
     //go through list and check if list is there
@@ -95,6 +111,17 @@ template<typename T>
 
     //add the new entity and return the type created
     return newList->AddComponent(entity);
+}
+
+template<typename T>
+ComponentList<T> *ComponentManager::GetList()
+{
+    auto it = manager_.lists_.find(rttr::type::get<T>());
+    if(it != manager_.lists_.end())
+    {
+        return static_cast<ComponentList<T> *>(it->second);
+    }
+    return nullptr;
 }
 
 #endif //_COMPONENTMANAGER_H_

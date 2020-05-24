@@ -10,6 +10,14 @@ Screen::Screen(int resX, int resY, ScreenType type) : resX_(resX), resY_(resY), 
 {
   //TODO: Add fullscreen
   glfwHandle_ = glfwCreateWindow(resX,resY,"Game", nullptr, nullptr);
+
+  switch (type_)
+  {
+    case ScreenType::Fullscreen:
+      glfwSetWindowMonitor(glfwHandle_,glfwGetPrimaryMonitor(), 0,0, resX_, resY_, 75);
+      break;
+  }
+
 }
 
 GLFWwindow *Screen::GetWindowHandle()
@@ -36,3 +44,5 @@ float Screen::GetHeight() const
 {
   return resY_;
 }
+
+

@@ -31,6 +31,7 @@ class Screen
 
     float GetRatio() const;
 
+
 private:
     friend class Engine;
 
@@ -41,6 +42,7 @@ private:
 
     Screen(int resX, int resY, ScreenType type);
     Screen() = default;
+    float OnWindow(GLFWwindow* window, int width, int height);
 };
 
 

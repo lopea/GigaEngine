@@ -11,6 +11,7 @@
  */
 #define SET_AS_COMPONENT RTTR_ENABLE(Component)
 
+
 /*!
  * Component base for all component types.
  * All Component must derive from this class

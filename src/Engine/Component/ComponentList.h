@@ -6,17 +6,18 @@
 #define _COMPONENTLIST_H_
 
 #include <map>
-
+#include <algorithm>
+#include <vector>
+#include <iostream>
 #include "ComponentExceptions.h"
-#include "../Entity/EntityBase.h"
+
+typedef uint64_t Entity;
 
 
 /*!
  * Handler to hold Componentlists without their unique type
  */
-class GenericComponentList
-{
-};
+class GenericComponentList {};
 
 /*!
  * Stores components of the same type based on their Entity associated with it.
@@ -26,11 +27,17 @@ template<typename T>
 class ComponentList : public GenericComponentList
 {
 public:
-    T& GetComponent(Entity entity);
+    T* GetComponent(Entity entity);
 
-    T& AddComponent(Entity entity);
+    T* AddComponent(Entity entity);
 
     void RemoveComponent(Entity entity);
+
+    std::vector<Entity> GetAllEnities();
+
+    size_t size();
+
+    std::vector<Entity> GetOverlappingEntities(std::vector<Entity>& reference);
 
 private:
     std::map<Entity, T> components_;
@@ -44,12 +51,17 @@ private:
 template<typename T>
 void ComponentList<T>::RemoveComponent(Entity entity)
 {
-    components_.erase(entity);
+  //find entity in the list
+  auto& it = components_.find(entity);
+
+  //if the entity exists, then remove it.
+  if(components_.end() != it)
+    components_.erase(it);
 }
 
 
 template<typename T>
-T& ComponentList<T>::GetComponent(Entity entity)
+T* ComponentList<T>::GetComponent(Entity entity)
 {
     //get iterator containing the component to find
     auto it = components_.find(entity);
@@ -58,11 +70,11 @@ T& ComponentList<T>::GetComponent(Entity entity)
     if (it != components_.end())
     {
         //send it off!
-        return it->second;
+        return &it->second;
     }
 
-    // nothing was found, throw an exception
-    throw ComponentNotFoundException(rttr::type::get<T>());
+    // nothing was found
+    return nullptr;
 
 }
 
@@ -73,20 +85,57 @@ T& ComponentList<T>::GetComponent(Entity entity)
  * @return  the newly added component
  */
 template<typename T>
-T &ComponentList<T>::AddComponent(Entity entity)
+T *ComponentList<T>::AddComponent(Entity entity)
 {
     //check if the component already exists
     auto it = components_.find(entity);
 
     //return the one found if it exists
     if(it != components_.end())
-        return it->second;
+        return &it->second;
 
     //component does not exist
     //add the entry to the component list
     components_.insert(std::pair<Entity,T>(entity, T()));
 
-    return components_[entity];
+    return &components_[entity];
+}
+
+template<typename T>
+size_t ComponentList<T>::size()
+{
+    return components_.size();
+}
+
+template<typename T>
+std::vector<Entity> ComponentList<T>::GetAllEnities()
+{
+    std::vector<Entity> ents;
+    for(auto& it : components_)
+    {
+        ents.push_back(it.first);
+    }
+
+
+    //std::reverse(ents.begin(),ents.end());
+    return ents;
+}
+
+template<typename T>
+std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity> &reference)
+{
+    std::vector<Entity> result;
+    std::vector<Entity> ents = GetAllEnities();
+
+    if(reference.empty() || ents.empty())
+    {
+        return result;
+    }
+
+    std::set_intersection(reference.begin(), reference.end(), ents.begin(), ents.end(), std::back_inserter(result));
+
+    return result;
+
 }
 
 #endif //_COMPONENTLIST_H_

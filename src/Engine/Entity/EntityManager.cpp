@@ -34,8 +34,7 @@ void EntityManager::Initialize ()
 }
 void EntityManager::DestroyEntity (Entity entity)
 {
-  if(std::find(manager_.destroy_.begin(),manager_.destroy_.end(), entity) != manager_.destroy_.end())
-    manager_.destroy_.push_back(entity.getID());
+
 }
 void EntityManager::CheckForDestruction ()
 {
