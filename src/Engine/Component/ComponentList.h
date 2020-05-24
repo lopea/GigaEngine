@@ -40,7 +40,8 @@ public:
     std::vector<Entity> GetOverlappingEntities(std::vector<Entity>& reference);
 
 private:
-    std::map<Entity, T> components_;
+    std::unordered_map<Entity, T> components_;
+    std::vector<Entity> entities_;
 };
 
 /*!
@@ -56,7 +57,11 @@ void ComponentList<T>::RemoveComponent(Entity entity)
 
   //if the entity exists, then remove it.
   if(components_.end() != it)
+  {
     components_.erase(it);
+    entities_.erase(std::find(entities_.begin(), entities_.end(), it));
+  }
+
 }
 
 
@@ -97,7 +102,7 @@ T *ComponentList<T>::AddComponent(Entity entity)
     //component does not exist
     //add the entry to the component list
     components_.insert(std::pair<Entity,T>(entity, T()));
-
+    entities_.push_back(entity);
     return &components_[entity];
 }
 
@@ -110,15 +115,7 @@ size_t ComponentList<T>::size()
 template<typename T>
 std::vector<Entity> ComponentList<T>::GetAllEnities()
 {
-    std::vector<Entity> ents;
-    for(auto& it : components_)
-    {
-        ents.push_back(it.first);
-    }
-
-
-    //std::reverse(ents.begin(),ents.end());
-    return ents;
+  return entities_;
 }
 
 template<typename T>

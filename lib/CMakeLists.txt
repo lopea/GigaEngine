@@ -11,7 +11,7 @@ if(MINGW)
 elseif(UNIX)
     message("-- Using RTTR source for Linux/Unix...")
     add_subdirectory(rttr-lin)
-    set(RTTR_LIBRARY rttr_core)
+
 else()
     #lol funny man trying to use MacOS
     message("-- Have Fun! --")

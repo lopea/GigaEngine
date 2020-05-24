@@ -45,4 +45,11 @@ float Screen::GetHeight() const
   return resY_;
 }
 
+void Screen::ChangeWindowSize(unsigned int newWidth, unsigned int newHeight)
+{
+  //update resolution values
+  resX_ = newWidth;
+  resY_ = newHeight;
 
+  glfwSetWindowSize(glfwHandle_, (int)newWidth, (int)newHeight);
+}

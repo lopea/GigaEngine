@@ -25,7 +25,7 @@ class Screen
 
     float GetHeight() const;
 
-    float ChangeWindowSize(unsigned int newWidth, unsigned int newHeight);
+    void ChangeWindowSize(unsigned int newWidth, unsigned int newHeight);
 
     float ChangeWindowType(const ScreenType type);
 
