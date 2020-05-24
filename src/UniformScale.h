@@ -8,9 +8,20 @@
 
 #include "Engine/Component/Component.h"
 
-struct UniformScale : public Component {
-    float value = 1;
-    SET_AS_COMPONENT
+struct UniformScale : public Component
+{
+    SET_AS_COMPONENT(UniformScale)
+    float Get() const { return value_; }
+    void Set(float value)
+    {
+      if(value != value_)
+      {
+        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        value_ = value;
+      }
+    }
+private:
+    float value_ = 1;
 };
 
 

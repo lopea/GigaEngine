@@ -10,7 +10,7 @@
 struct ComponentTest : public Component
 {
     float value = 0;
-    SET_AS_COMPONENT
+    SET_AS_COMPONENT(ComponentTest)
 };
 
 

@@ -12,9 +12,9 @@
 
 struct Renderer : public Component
 {
+    SET_AS_COMPONENT(Renderer)
     Shader shader;
     Mesh mesh_;
-    SET_AS_COMPONENT
 };
 
 

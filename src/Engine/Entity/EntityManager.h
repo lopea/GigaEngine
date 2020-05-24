@@ -21,7 +21,8 @@ class EntityManager {
 
   static EntityManager manager_;
   EntityList entities_;
-  std::vector<unsigned int> destroy_;
+  std::vector<Entity> destroy_;
+  std::vector<Entity> available_;
   static bool Init_;
 };
 

@@ -44,6 +44,10 @@ void Engine::Initialize()
     init_ = true;
     running_ = true;
 
+    //initialize managers
+    ComponentManager::Initialize();
+    EntityManager::Initialize();
+
     shader_ = Shader("../src/Shaders/shader.vs", "../src/Shaders/shader.fs");
 
     float vertices[] = {
@@ -86,13 +90,12 @@ void Engine::Run()
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
-
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 200; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
         Translation *t = ComponentManager::AddComponent<Translation>(ent);
-        t->value = glm::vec3(i % 100 - 25, i / 100, 0);
+        t->Set(glm::vec3(i % 100 - 25, i / 100, 0));
         ComponentManager::AddComponent<Rotation>(ent);
         ComponentManager::AddComponent<UniformScale>(ent);
         Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
@@ -117,7 +120,7 @@ void Engine::Run()
         // render
         // ------
         glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime() * 2), 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         rot_system.Update();
@@ -136,7 +139,7 @@ void Engine::Run()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwSwapBuffers(Engine::GetScreen().glfwHandle_);
+        glfwSwapBuffers(Engine::GetScreen().GetWindowHandle());
         glfwPollEvents();
 
         if (abs(fmod(glfwGetTime(), 0.2)) < 0.01)

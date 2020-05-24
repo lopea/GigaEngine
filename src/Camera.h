@@ -8,7 +8,7 @@
 #include "Engine/Math.h"
 class Camera : public Component
 {
-  SET_AS_COMPONENT
+  SET_AS_COMPONENT(Camera)
   float zoom = 1;
 };
 

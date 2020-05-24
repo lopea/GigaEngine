@@ -14,6 +14,6 @@ void RotateTestSystem::Update()
     EntityManager::GetEntities().ParallelForEach<Rotation>
             ([time](Rotation& rot)
             {
-                rot.value = glm::sin(time) * 10;
+                rot.Set(glm::sin(time + rot.GetEntity()) * 10);
             });
 }

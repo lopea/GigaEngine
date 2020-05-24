@@ -7,11 +7,22 @@
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
 #include "Engine/Component/Component.h"
+#include "LocalToWorldMatrix.h"
 #include <rttr/type>
 struct Rotation : public Component
 {
-    float value = 0;
-    SET_AS_COMPONENT
+    SET_AS_COMPONENT(Rotation);
+    float Get() const { return value_; }
+    void Set(float value)
+    {
+      if(value != value_)
+      {
+        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        value_ = value;
+      }
+    }
+private:
+    float value_ = 0;
 };
 
 

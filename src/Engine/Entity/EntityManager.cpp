@@ -31,6 +31,7 @@ Entity& EntityManager::AddEntity ()
 void EntityManager::Initialize ()
 {
   Init_ = true;
+  manager_.entities_.main_ = true;
 }
 void EntityManager::DestroyEntity (Entity entity)
 {

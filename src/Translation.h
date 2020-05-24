@@ -7,12 +7,27 @@
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
 #include "Engine/Component/Component.h"
+#include "LocalToWorldMatrix.h"
 #include <glm.hpp>
 
 struct Translation : public Component
 {
-    glm::vec3 value = glm::vec3(0);
-    SET_AS_COMPONENT
+    SET_AS_COMPONENT(Translation)
+    glm::vec3 Get() const
+    {
+      return value_;
+    }
+
+    void Set(glm::vec3 value)
+    {
+      if(value != value_)
+      {
+        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        value_ = value;
+      }
+    }
+private:
+    glm::vec3 value_ = glm::vec3(0);
 };
 
 #endif //GIGAENGINE_TRANSLATION_H

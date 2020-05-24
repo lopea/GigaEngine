@@ -37,11 +37,15 @@ public:
 
     size_t size();
 
-    std::vector<Entity> GetOverlappingEntities(std::vector<Entity>& reference);
+    std::vector<Entity> GetOverlappingEntities(std::vector<Entity> reference);
+
+    bool empty() const;
 
 private:
     std::unordered_map<Entity, T> components_;
-    std::vector<Entity> entities_;
+    std::set<Entity> entities_;
+    friend class ComponentManager;
+    void clear();
 };
 
 /*!
@@ -101,9 +105,9 @@ T *ComponentList<T>::AddComponent(Entity entity)
 
     //component does not exist
     //add the entry to the component list
-    components_.insert(std::pair<Entity,T>(entity, T()));
-    entities_.push_back(entity);
-    return &components_[entity];
+    components_.insert(std::pair<Entity,T>(entity, T(entity)));
+    entities_.insert(entity);
+    return &components_.find(entity)->second;
 }
 
 template<typename T>
@@ -115,11 +119,16 @@ size_t ComponentList<T>::size()
 template<typename T>
 std::vector<Entity> ComponentList<T>::GetAllEnities()
 {
-  return entities_;
+  if(entities_.empty())
+    return std::vector<Entity>();
+  std::vector<Entity> result(entities_.size());
+
+  std::copy(entities_.begin(), entities_.end(), result.begin());
+  return result;
 }
 
 template<typename T>
-std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity> &reference)
+std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity> reference)
 {
     std::vector<Entity> result;
     std::vector<Entity> ents = GetAllEnities();
@@ -133,6 +142,19 @@ std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity>
 
     return result;
 
+}
+
+template<typename T>
+void ComponentList<T>::clear()
+{
+  entities_.clear();
+  components_.clear();
+}
+
+template<typename T>
+bool ComponentList<T>::empty() const
+{
+  return entities_.empty();
 }
 
 #endif //_COMPONENTLIST_H_

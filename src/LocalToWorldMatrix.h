@@ -13,8 +13,10 @@
 struct LocalToWorldMatrix : public Component
 {
     glm::mat4x4 value = glm::identity<glm::mat4x4>();
-    SET_AS_COMPONENT
+    SET_AS_COMPONENT(LocalToWorldMatrix)
 };
+
+struct DirtyTransform : public Component {int temp = 0; SET_AS_COMPONENT(DirtyTransform)};
 
 
 #endif //GIGAENGINE_LOCALTOWORLDMATRIX_H
