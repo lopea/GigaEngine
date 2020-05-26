@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <rttr/type>
+#include <omp.h>
 #include "ComponentList.h"
 #include "Component.h"
 
@@ -24,6 +25,12 @@ public:
     static void Shutdown()
     {
       Init_ = false;
+      for(auto& it : manager_.lists_)
+      {
+        delete it.second;
+        it.second = nullptr;
+      }
+      manager_.lists_.clear();
     }
 
     template<typename T>
@@ -86,6 +93,7 @@ T *ComponentManager::GetComponent(Entity entity)
 template<typename T>
 T *ComponentManager::AddComponent(Entity entity)
 {
+
   //get the type of T
   rttr::type t = rttr::type::get<T>();
 
@@ -115,8 +123,11 @@ T *ComponentManager::AddComponent(Entity entity)
   manager_.lists_.insert(std::pair<rttr::type, GenericComponentList *>(
           t, static_cast<GenericComponentList *>(newList)));
 
+  T* result = newList->AddComponent(entity);
+
+
   //add the new entity and return the type created
-  return newList->AddComponent(entity);
+  return result;
 }
 
 template<typename T>
@@ -138,7 +149,10 @@ void ComponentManager::RemoveAllComponents()
   ComponentList<T>* list = GetList<T>();
   if(list)
   {
+    manager_.lists_.erase(rttr::type::get<T>());
     list->clear();
+    delete list;
+    list = nullptr;
   }
 }
 

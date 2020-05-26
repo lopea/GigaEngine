@@ -17,9 +17,6 @@ const glm::vec3 rotateAxis = glm::vec3(0, 0, 1);
 
 //This system will update all the matrices based on the position, rotation, and scale
 //each system will update individually as not all entities will contain all these components
-
-//FIXME: This is ultra inefficient, all the matrices get updated regardless of movement
-
 void MatrixSystem::Update()
 {
     EntityList updateEntities = EntityManager::GetEntities().OfType<DirtyTransform>();
@@ -69,5 +66,6 @@ void MatrixSystem::Update()
 
             });
 
-    //ComponentManager::RemoveAllComponents<DirtyTransform>();
+    ComponentManager::RemoveAllComponents<DirtyTransform>();
+    
 }

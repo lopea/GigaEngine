@@ -6,7 +6,7 @@ project(GigaEngine)
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "-mavx2 -fopenmp")
+set(CMAKE_CXX_FLAGS "-mavx2 ")
 
 
 
@@ -29,7 +29,6 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Entity/EntityManager.cpp
         src/Engine/Entity/EntityManager.h
         src/Engine/Entity/EntityList.h
-        src/Engine/Entity/EntityList.cpp
         src/Engine/Systems/SystemBase.h
         src/Engine/Engine.cpp src/Engine/Engine.h src/Engine/Math.h src/Engine/Screen.cpp src/Engine/Screen.h)
 

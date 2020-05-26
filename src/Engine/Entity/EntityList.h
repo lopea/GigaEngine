@@ -66,6 +66,7 @@ private:
 
     Entity &back();
 
+    void clear();
 
 };
 
@@ -332,6 +333,11 @@ inline size_t EntityList::size() const
 inline bool EntityList::empty() const
 {
   return entities_.empty();
+}
+
+inline void EntityList::clear()
+{
+  return entities_.clear();
 }
 
 /*!

@@ -90,7 +90,7 @@ void Engine::Run()
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 1000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
@@ -110,16 +110,17 @@ void Engine::Run()
     //check if the engine is still running
     while (running_)
     {
-        if (glfwWindowShouldClose(current_.currentScreen_.GetWindowHandle()))
+        if (glfwWindowShouldClose(GetScreen().GetWindowHandle()))
         {
             running_ = false;
+            Engine::Terminate();
         }
         float timer = glfwGetTime();
 
         glViewport(0, 0, GetScreen().GetWidth(), GetScreen().GetHeight());
         // render
         // ------
-        glClearColor(sin(glfwGetTime()), sin(glfwGetTime() * 6), sin(glfwGetTime() * 2), 1.0f);
+        glClearColor(1,1,1,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -153,10 +154,24 @@ void Engine::Run()
 }
 
 /*!
- * Get the handle that represents the new
- * @return
+ * Get the handle that represents the main screen in the game.
+ * @return the handle to the main screen
  */
 Screen Engine::GetScreen()
 {
     return current_.currentScreen_;
+}
+
+void Engine::Terminate()
+{
+#pragma omp critical
+  {
+    running_ = false;
+    init_ = false;
+    ComponentManager::Shutdown();
+    EntityManager::Shutdown();
+    GetScreen().Shutdown();
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+  }
 }

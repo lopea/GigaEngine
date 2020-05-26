@@ -17,7 +17,7 @@ typedef uint64_t Entity;
 /*!
  * Handler to hold Componentlists without their unique type
  */
-class GenericComponentList {};
+class GenericComponentList {public : virtual ~GenericComponentList() = default; };
 
 /*!
  * Stores components of the same type based on their Entity associated with it.
@@ -40,7 +40,7 @@ public:
     std::vector<Entity> GetOverlappingEntities(std::vector<Entity> reference);
 
     bool empty() const;
-
+    ~ComponentList();
 private:
     std::unordered_map<Entity, T> components_;
     std::set<Entity> entities_;
@@ -84,7 +84,6 @@ T* ComponentList<T>::GetComponent(Entity entity)
 
     // nothing was found
     return nullptr;
-
 }
 
 /*!
@@ -96,17 +95,22 @@ T* ComponentList<T>::GetComponent(Entity entity)
 template<typename T>
 T *ComponentList<T>::AddComponent(Entity entity)
 {
+  typename std::unordered_map<Entity, T>::iterator it;
     //check if the component already exists
-    auto it = components_.find(entity);
-
+  #pragma omp critical
+  {
+     it = components_.find(entity);
+  }
     //return the one found if it exists
-    if(it != components_.end())
-        return &it->second;
-
+    if (it != components_.end())
+      return &it->second;
+  #pragma omp critical
+  {
     //component does not exist
     //add the entry to the component list
-    components_.insert(std::pair<Entity,T>(entity, T(entity)));
+    components_.insert(std::pair<Entity, T>(entity, T(entity)));
     entities_.insert(entity);
+  }
     return &components_.find(entity)->second;
 }
 
@@ -141,7 +145,6 @@ std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity>
     std::set_intersection(reference.begin(), reference.end(), ents.begin(), ents.end(), std::back_inserter(result));
 
     return result;
-
 }
 
 template<typename T>
@@ -155,6 +158,13 @@ template<typename T>
 bool ComponentList<T>::empty() const
 {
   return entities_.empty();
+}
+
+template<typename T>
+ComponentList<T>::~ComponentList()
+{
+  components_.clear();
+  entities_.clear();
 }
 
 #endif //_COMPONENTLIST_H_

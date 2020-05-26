@@ -16,7 +16,7 @@ struct LocalToWorldMatrix : public Component
     SET_AS_COMPONENT(LocalToWorldMatrix)
 };
 
-struct DirtyTransform : public Component {int temp = 0; SET_AS_COMPONENT(DirtyTransform)};
+struct DirtyTransform : public Component {SET_AS_COMPONENT(DirtyTransform)};
 
 
 #endif //GIGAENGINE_LOCALTOWORLDMATRIX_H

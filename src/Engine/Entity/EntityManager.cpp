@@ -57,4 +57,12 @@ EntityList &EntityManager::GetEntities()
     return manager_.entities_;
 }
 
+void EntityManager::Shutdown()
+{
+  Init_ = false;
+  manager_.entities_.clear();
+  manager_.available_.clear();
+  manager_.entities_.clear();
+}
+
 

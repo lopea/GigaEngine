@@ -53,3 +53,9 @@ void Screen::ChangeWindowSize(unsigned int newWidth, unsigned int newHeight)
 
   glfwSetWindowSize(glfwHandle_, (int)newWidth, (int)newHeight);
 }
+
+void Screen::Shutdown()
+{
+  glfwDestroyWindow(glfwHandle_);
+}
+

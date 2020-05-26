@@ -18,12 +18,13 @@ class EntityManager {
   static EntityList& GetEntities();
   EntityManager();
  private:
-
+    static void Shutdown();
   static EntityManager manager_;
   EntityList entities_;
   std::vector<Entity> destroy_;
   std::vector<Entity> available_;
   static bool Init_;
+  friend class Engine;
 };
 
 #endif //_ENTITYMANAGER_H_

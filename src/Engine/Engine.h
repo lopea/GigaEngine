@@ -16,7 +16,7 @@ public:
 
     static void Run();
 
-    static void ShutDown();
+    static void Terminate();
 
 private:
     Screen currentScreen_;
