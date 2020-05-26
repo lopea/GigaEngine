@@ -3,17 +3,16 @@
 //
 
 #include "Engine.h"
-#include "Entity/EntityManager.h"
-#include "../Translation.h"
-#include "../UniformScale.h"
-#include "../Renderer.h"
-#include "../LocalToWorldMatrix.h"
-#include "../MatrixSystem.h"
-#include "../RotateTestSystem.h"
-#include "../RenderSystem.h"
-#include "../Rotation.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <Engine/Component/Rendering/Shader.h>
+#include <Engine/Component/ComponentManager.h>
+#include <Engine/Entity/EntityManager.h>
+#include <Engine/Transform.h>
+#include <Engine/Component/Rendering/Renderer.h>
+#include <Engine/Systems/BuiltIn/MatrixSystem.h>
+#include <Engine/Systems/BuiltIn/RenderSystem.h>
+#include "RotateTestSystem.h"
 
 bool Engine::init_ = false;
 Engine Engine::current_;

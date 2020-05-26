@@ -7,15 +7,15 @@
 #include "Graphics.h"
 #include "Engine/Entity/EntityManager.h"
 #include "Engine/Component/ComponentTest.h"
-#include "Renderer.h"
-#include "Translation.h"
-#include "Rotation.h"
-#include "Scale.h"
-#include "LocalToWorldMatrix.h"
-#include "MatrixSystem.h"
-#include "RenderSystem.h"
+#include "Engine/Component/Rendering/Renderer.h"
+#include "Engine/Component/Transform/Translation.h"
+#include "Engine/Component/Transform/Rotation.h"
+#include "Engine/Component/Transform/Scale.h"
+#include "Engine/Component/Transform/LocalToWorldMatrix.h"
+#include "Engine/Systems/BuiltIn/MatrixSystem.h"
+#include "Engine/Systems/BuiltIn/RenderSystem.h"
 #include "RotateTestSystem.h"
-#include "UniformScale.h"
+#include "Engine/Component/Transform/UniformScale.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 

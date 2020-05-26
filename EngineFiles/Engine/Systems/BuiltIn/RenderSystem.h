@@ -2,15 +2,25 @@
 // Created by javier on 5/5/2020.
 //
 
-#include "RenderSystem.h"
+#ifndef GIGAENGINE_RENDERSYSTEM_H
+#define GIGAENGINE_RENDERSYSTEM_H
+
+
+#include "../SystemBase.h"
+#include "../../Math.h"
+#include "../../Entity/EntityManager.h"
+#include "../../Transform.h"
+#include "../../Component/Rendering/Renderer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "Shader.h"
-#include "Engine/Entity/EntityManager.h"
-#include "LocalToWorldMatrix.h"
-#include "Renderer.h"
 
-void RenderSystem::Update()
+class RenderSystem : public SystemBase
+{
+public:
+    void Update() override;
+};
+
+inline void RenderSystem::Update()
 {
 
   //This code does the following:
@@ -21,7 +31,7 @@ void RenderSystem::Update()
           ([](Renderer &renderer, LocalToWorldMatrix &matrix)
            {
 
-              matrix.value[3][3] = 100;
+               matrix.value[3][3] = 100;
 
                //Bind the matrix to the shader
                glUniformMatrix4fv(glGetUniformLocation(renderer.shader.ID_, "MVP"), 1, GL_FALSE,
@@ -31,3 +41,5 @@ void RenderSystem::Update()
                glDrawArrays(GL_TRIANGLES, 0, 9);
            });
 }
+
+#endif //GIGAENGINE_RENDERSYSTEM_H

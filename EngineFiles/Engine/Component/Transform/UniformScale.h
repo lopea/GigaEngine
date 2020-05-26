@@ -6,7 +6,8 @@
 #define GIGAENGINE_UNIFORMSCALE_H
 
 
-#include "Engine/Component/Component.h"
+#include "../Component.h"
+#include "DirtyTransform.h"
 
 struct UniformScale : public Component
 {

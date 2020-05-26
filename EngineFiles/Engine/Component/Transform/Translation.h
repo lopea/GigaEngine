@@ -6,8 +6,10 @@
 #define GIGAENGINE_TRANSLATION_H
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
-#include "Engine/Component/Component.h"
+#include "../Component.h"
+#include "../ComponentManager.h"
 #include "LocalToWorldMatrix.h"
+#include "DirtyTransform.h"
 #include <glm.hpp>
 
 struct Translation : public Component

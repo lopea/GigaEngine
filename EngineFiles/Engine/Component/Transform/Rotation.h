@@ -6,8 +6,9 @@
 #define GIGAENGINE_ROTATION_H
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
-#include "Engine/Component/Component.h"
-#include "LocalToWorldMatrix.h"
+#include "../Component.h"
+#include "DirtyTransform.h"
+
 #include <rttr/type>
 struct Rotation : public Component
 {

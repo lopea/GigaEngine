@@ -1,5 +1,6 @@
-#include "Graphics.h"
-#include "Engine/Engine.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "Engine.h"
 
 int main()
 {

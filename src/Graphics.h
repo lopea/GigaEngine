@@ -5,7 +5,7 @@
 
 #include "GLFW/glfw3.h"
 #include "System.h"
-#include "Shader.h"
+#include "Engine/Component/Rendering/Shader.h"
 
 
 class Graphics
