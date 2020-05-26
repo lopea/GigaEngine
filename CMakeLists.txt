@@ -64,4 +64,10 @@ set(Giga_SOURCES
 add_executable(${PROJECT_NAME} ${Giga_ENGINE_SOURCES} ${Giga_SOURCES})
 
 # Linking needed libraries
-target_link_libraries(${PROJECT_NAME} glad glfw rttr_core)
+target_link_libraries(${PROJECT_NAME} glad glfw)
+
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} rttr_core)
+elseif(MINGW)
+    target_link_libraries(${PROJECT_NAME} ${RTTR_LIBRARY})
+endif()
