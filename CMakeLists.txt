@@ -19,20 +19,45 @@ endif()
 add_subdirectory(lib)
 include_directories(lib/glm)
 include_directories(lib/rttr/include)
-include_directories(EngineFiles)
 
-
+set(Giga_ENGINE_SOURCES
+        src/Engine/Component/ComponentTest.h
+        src/Engine/Component/ComponentManager.h
+        src/Engine/Component/ComponentList.h
+        src/Engine/Component/ComponentExceptions.h
+        src/Engine/Component/Component.h
+        src/Engine/Entity/EntityManager.cpp
+        src/Engine/Entity/EntityManager.h
+        src/Engine/Entity/EntityList.h
+        src/Engine/Systems/SystemBase.h
+        src/Engine/Engine.cpp
+        src/Engine/Engine.h
+        src/Engine/Math.h
+        src/Engine/Screen.cpp
+        src/Engine/Screen.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES
         src/main.cpp
         src/Graphics.cpp
         src/Graphics.h
+        src/Shader.cpp
+        src/Shader.h
         src/System.h
+        src/Translation.h
+        src/Rotation.h
+        src/Scale.h
+        src/LocalToWorldMatrix.h
+        src/Vertex.h
+        src/Mesh.cpp
+        src/Mesh.h
+        src/MatrixSystem.cpp
+        src/MatrixSystem.h
+        src/Renderer.h
+        src/RenderSystem.cpp
+        src/RenderSystem.h
         src/RotateTestSystem.cpp
-        src/RotateTestSystem.h
-        src/Engine.cpp
-        src/Engine.h)
+        src/RotateTestSystem.h src/UniformScale.h src/Camera.cpp src/Camera.h)
 
 
 
