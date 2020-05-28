@@ -8,7 +8,7 @@
 #define GLM_FORCE_ALIGNED
 #include <glm.hpp>
 #include <ext.hpp>
-#include "../Component.h"
+#include "Engine/Component/Component.h"
 
 struct LocalToWorldMatrix : public Component
 {
@@ -16,7 +16,7 @@ struct LocalToWorldMatrix : public Component
     SET_AS_COMPONENT(LocalToWorldMatrix)
 };
 
-
+struct DirtyTransform : public Component {SET_AS_COMPONENT(DirtyTransform)};
 
 
 #endif //GIGAENGINE_LOCALTOWORLDMATRIX_H

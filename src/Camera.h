@@ -4,8 +4,8 @@
 
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
-#include "../Component.h"
-#include "../../Math.h"
+#include "Engine/Component/Component.h"
+#include "Engine/Math.h"
 class Camera : public Component
 {
   SET_AS_COMPONENT(Camera)

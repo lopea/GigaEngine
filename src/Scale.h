@@ -6,10 +6,9 @@
 #define GIGAENGINE_SCALE_H
 #define GLM_FORCE_AVX2
 #define GLM_FORCE_ALIGNED
-#include "../Component.h"
+#include "Engine/Component/Component.h"
+#include "LocalToWorldMatrix.h"
 #include <glm.hpp>
-#include "DirtyTransform.h"
-
 struct Scale : public Component
 {
     SET_AS_COMPONENT(Scale)

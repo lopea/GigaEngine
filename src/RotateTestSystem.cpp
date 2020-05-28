@@ -6,7 +6,7 @@
 #include <glm.hpp>
 #include "RotateTestSystem.h"
 #include "Engine/Entity/EntityManager.h"
-#include "Engine/Component/Transform/Rotation.h"
+#include "Rotation.h"
 
 void RotateTestSystem::Update()
 {

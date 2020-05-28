@@ -8,7 +8,7 @@
 
 #include "Mesh.h"
 #include "Shader.h"
-#include "../Component.h"
+#include "Engine/Component/Component.h"
 
 struct Renderer : public Component
 {

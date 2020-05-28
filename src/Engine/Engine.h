@@ -6,7 +6,7 @@
 #define GIGAENGINE_ENGINE_H
 
 
-#include "Engine/Screen.h"
+#include "Screen.h"
 
 class Engine
 {
