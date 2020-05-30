@@ -7,6 +7,8 @@
 
 #include <rttr/type>
 
+typedef uint64_t Entity;
+
 /*!
  * Macro that tells Reflection System (RTTR) to detect that the derived class is a Component.
  */
@@ -21,7 +23,7 @@
 #define SET_AS_DERIVED_COMPONENT(Type, DerivedType) explicit Type(Entity t) : Component(t){} \
                                RTTR_ENABLE(DerivedType)
 
-typedef uint64_t Entity;
+
 
 /*!
  * Component base for all component types.

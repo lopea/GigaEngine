@@ -98,9 +98,10 @@ void Engine::Run()
         t->Set(glm::vec3(i % 100 - 25, i / 100, 0));
         ComponentManager::AddComponent<Rotation>(ent);
         ComponentManager::AddComponent<UniformScale>(ent);
-        Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
-        rend->shader = shader_;
+        //Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
+        //rend->shader = shader_;
         ComponentManager::AddComponent<LocalToWorldMatrix>(ent);
+
     }
 
     MatrixSystem m_system;
@@ -143,7 +144,7 @@ void Engine::Run()
         glfwSwapBuffers(Engine::GetScreen().GetWindowHandle());
         glfwPollEvents();
 
-        if (abs(fmod(glfwGetTime(), 0.2)) < 0.01)
+        if (abs(fmod(glfwGetTime(), 0.5)) < 0.01 )
         {
             std::string s = "Fps: ";
             s += std::to_string(1 / (glfwGetTime() - timer));

@@ -7,11 +7,13 @@
 
 
 #include "../Component/ComponentManager.h"
+#include "../Tag/TagBase.h"
+#include "../Tag/TagManager.h"
 #include <omp.h>
 #include <vector>
 #include <algorithm>
 
-typedef uint64_t Entity;
+using Entity = uint64_t;
 
 class EntityList
 {
@@ -198,16 +200,22 @@ EntityList EntityList::OfTypes() const
 template<typename T>
 EntityList EntityList::OfType() const
 {
+  rttr::type t = rttr::type::get<T>();
+  if(t.is_derived_from<TagBase>())
+  {
+    TagList<T>* list = TagManager::GetList<T>();
+    if(list)
+    {
+      std::vector<Entity> ents = list->GetOverlappingEntities(entities_);
+
+      return EntityList(ents);
+    }
+    return EntityList();
+  }
   ComponentList<T> *list = ComponentManager::GetList<T>();
 
   if (list)
   {
-    //if this is the main list, add all the entities that have this type
-    if (main_)
-    {
-      std::vector<Entity> ent(list->GetAllEnities());
-      return EntityList(ent);
-    }
 
     //find overlapping entities between the component and this list
     std::vector<Entity> ents = list->GetOverlappingEntities(entities_);
@@ -266,13 +274,10 @@ void EntityList::ForEach(Func function)
   ComponentList<T1> *list1 = ComponentManager::GetList<T1>();
   ComponentList<T2> *list2 = ComponentManager::GetList<T2>();
 
-  if (!list1 || !list2)
+  if(entities_.empty() || !list2 || !list1)
     return;
 
-  std::vector<Entity> ent2 = list2->GetOverlappingEntities(entities_);
-  std::vector<Entity> ents = list1->GetOverlappingEntities(ent2);
-
-  for (auto &entity : ents)
+  for (auto &entity : entities_)
   {
     T1 *comp1 = list1->GetComponent(entity);
     T2 *comp2 = list2->GetComponent(entity);
@@ -301,19 +306,14 @@ void EntityList::ParallelForEach(Func function)
   ComponentList<T1> *list1 = ComponentManager::GetList<T1>();
   ComponentList<T2> *list2 = ComponentManager::GetList<T2>();
 
-  if (!list1 || !list2)
+
+  if(!list1 || !list2 || entities_.empty())
     return;
 
-  std::vector<Entity> ent2 = list2->GetOverlappingEntities(entities_);
-  std::vector<Entity> ents = list1->GetOverlappingEntities(ent2);
-
-  if (ents.empty())
-    return;
-
-#pragma omp parallel for schedule(static) shared(function, list1, list2, ents) default(none)
-  for (int i = 0; i < ents.size(); ++i)
+  #pragma omp parallel for schedule(static) shared(function, list1, list2) default(none)
+  for (int i = 0; i < entities_.size(); ++i)
   {
-    Entity entity = ents[i];
+    Entity entity = entities_[i];
 
     T1 *comp1 = list1->GetComponent(entity);
     T2 *comp2 = list2->GetComponent(entity);

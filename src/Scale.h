@@ -9,6 +9,7 @@
 #include "Engine/Component/Component.h"
 #include "LocalToWorldMatrix.h"
 #include <glm.hpp>
+#include "Engine/Tag/TagManager.h"
 struct Scale : public Component
 {
     SET_AS_COMPONENT(Scale)
@@ -21,7 +22,7 @@ struct Scale : public Component
     {
       if(value != value_)
       {
-        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        TagManager::AddTag<DirtyTransform>(GetEntity());
         value_ = value;
       }
     }

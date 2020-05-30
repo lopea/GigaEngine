@@ -6,7 +6,7 @@ project(GigaEngine)
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "-mavx2 ")
+set(CMAKE_CXX_FLAGS "-mavx2 -O0")
 
 
 
@@ -34,7 +34,7 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Engine.h
         src/Engine/Math.h
         src/Engine/Screen.cpp
-        src/Engine/Screen.h)
+        src/Engine/Screen.h src/Engine/Tag/TagBase.h src/Engine/Tag/TagManager.h src/Engine/Tag/TagList.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES

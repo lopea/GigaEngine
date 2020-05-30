@@ -8,6 +8,7 @@
 #define GLM_FORCE_ALIGNED
 #include "Engine/Component/Component.h"
 #include "LocalToWorldMatrix.h"
+#include "Engine/Tag/TagManager.h"
 #include <glm.hpp>
 
 struct Translation : public Component
@@ -22,7 +23,7 @@ struct Translation : public Component
     {
       if(value != value_)
       {
-        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        TagManager::AddTag<DirtyTransform>(GetEntity());
         value_ = value;
       }
     }

@@ -16,7 +16,7 @@ struct UniformScale : public Component
     {
       if(value != value_)
       {
-        ComponentManager::AddComponent<DirtyTransform>(GetEntity());
+        TagManager::AddTag<DirtyTransform>(GetEntity());
         value_ = value;
       }
     }

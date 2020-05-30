@@ -17,7 +17,11 @@ typedef uint64_t Entity;
 /*!
  * Handler to hold Componentlists without their unique type
  */
-class GenericComponentList {public : virtual ~GenericComponentList() = default; };
+class GenericComponentList
+{
+public :
+    virtual ~GenericComponentList() = default;
+};
 
 /*!
  * Stores components of the same type based on their Entity associated with it.
@@ -27,24 +31,25 @@ template<typename T>
 class ComponentList : public GenericComponentList
 {
 public:
-    T* GetComponent(Entity entity);
+    T *GetComponent(Entity entity);
 
-    T* AddComponent(Entity entity);
+    T *AddComponent(Entity entity);
 
     void RemoveComponent(Entity entity);
-
-    std::vector<Entity> GetAllEnities();
 
     size_t size();
 
     std::vector<Entity> GetOverlappingEntities(std::vector<Entity> reference);
 
     bool empty() const;
-    ~ComponentList();
+
 private:
-    std::unordered_map<Entity, T> components_;
+    std::vector<T> components_;
+    std::unordered_map<Entity, size_t> EntityToIndex_;
+    std::deque<size_t> available_;
     std::set<Entity> entities_;
     friend class ComponentManager;
+
     void clear();
 };
 
@@ -56,34 +61,27 @@ private:
 template<typename T>
 void ComponentList<T>::RemoveComponent(Entity entity)
 {
-  //find entity in the list
-  auto& it = components_.find(entity);
-
-  //if the entity exists, then remove it.
-  if(components_.end() != it)
-  {
-    components_.erase(it);
-    entities_.erase(std::find(entities_.begin(), entities_.end(), it));
-  }
-
+  available_.push_back(EntityToIndex_[entity]);
+  EntityToIndex_.erase(entity);
+  entities_.erase(entity);
 }
 
 
 template<typename T>
-T* ComponentList<T>::GetComponent(Entity entity)
+T *ComponentList<T>::GetComponent(Entity entity)
 {
-    //get iterator containing the component to find
-    auto it = components_.find(entity);
+  //get iterator containing the component to find
+  auto it = EntityToIndex_.find(entity);
 
-    // if the component exists,
-    if (it != components_.end())
-    {
-        //send it off!
-        return &it->second;
-    }
+  // if the component exists,
+  if (it != EntityToIndex_.end())
+  {
+    //send it off!
+    return & components_[it->second];
+  }
 
-    // nothing was found
-    return nullptr;
+  // nothing was found
+  return nullptr;
 }
 
 /*!
@@ -95,76 +93,60 @@ T* ComponentList<T>::GetComponent(Entity entity)
 template<typename T>
 T *ComponentList<T>::AddComponent(Entity entity)
 {
-  typename std::unordered_map<Entity, T>::iterator it;
-    //check if the component already exists
-  #pragma omp critical
+  auto it = EntityToIndex_.find(entity);
+  if(it != EntityToIndex_.end())
+    return &components_[it->second];
+
+  size_t currSize;
+  if(!available_.empty())
   {
-     it = components_.find(entity);
+    currSize = available_.back();
+    available_.pop_back();
+    components_[currSize] = T(entity);
   }
-    //return the one found if it exists
-    if (it != components_.end())
-      return &it->second;
-  #pragma omp critical
+  else
   {
-    //component does not exist
-    //add the entry to the component list
-    components_.insert(std::pair<Entity, T>(entity, T(entity)));
-    entities_.insert(entity);
+    currSize = components_.size();
+    components_.push_back(T(entity));
   }
-    return &components_.find(entity)->second;
+  EntityToIndex_[entity] = currSize;
+  entities_.insert(entity);
+
+  return &components_[currSize];
 }
 
 template<typename T>
 size_t ComponentList<T>::size()
 {
-    return components_.size();
-}
-
-template<typename T>
-std::vector<Entity> ComponentList<T>::GetAllEnities()
-{
-  if(entities_.empty())
-    return std::vector<Entity>();
-  std::vector<Entity> result(entities_.size());
-
-  std::copy(entities_.begin(), entities_.end(), result.begin());
-  return result;
+  return components_.size();
 }
 
 template<typename T>
 std::vector<Entity> ComponentList<T>::GetOverlappingEntities(std::vector<Entity> reference)
 {
-    std::vector<Entity> result;
-    std::vector<Entity> ents = GetAllEnities();
+  std::vector<Entity> result;
 
-    if(reference.empty() || ents.empty())
-    {
-        return result;
-    }
+  if (!reference.empty() && !entities_.empty())
+    std::set_intersection(reference.begin(), reference.end(), entities_.begin(), entities_.end(), std::back_inserter(result));
 
-    std::set_intersection(reference.begin(), reference.end(), ents.begin(), ents.end(), std::back_inserter(result));
-
-    return result;
+  return result;
 }
 
 template<typename T>
 void ComponentList<T>::clear()
 {
-  entities_.clear();
   components_.clear();
+  EntityToIndex_.clear();
+  entities_.clear();
 }
 
 template<typename T>
 bool ComponentList<T>::empty() const
 {
-  return entities_.empty();
+  return components_.empty();
 }
 
-template<typename T>
-ComponentList<T>::~ComponentList()
-{
-  components_.clear();
-  entities_.clear();
-}
+
+
 
 #endif //_COMPONENTLIST_H_

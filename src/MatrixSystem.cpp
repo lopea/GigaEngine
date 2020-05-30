@@ -66,6 +66,6 @@ void MatrixSystem::Update()
 
             });
 
-    ComponentManager::RemoveAllComponents<DirtyTransform>();
-    
+
+    TagManager::ClearAllTagsOfType<DirtyTransform>();
 }

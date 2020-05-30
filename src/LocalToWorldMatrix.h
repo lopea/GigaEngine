@@ -9,6 +9,7 @@
 #include <glm.hpp>
 #include <ext.hpp>
 #include "Engine/Component/Component.h"
+#include "Engine/Tag/TagBase.h"
 
 struct LocalToWorldMatrix : public Component
 {
@@ -16,7 +17,7 @@ struct LocalToWorldMatrix : public Component
     SET_AS_COMPONENT(LocalToWorldMatrix)
 };
 
-struct DirtyTransform : public Component {SET_AS_COMPONENT(DirtyTransform)};
+struct DirtyTransform : public TagBase {SET_AS_TAG()};
 
 
 #endif //GIGAENGINE_LOCALTOWORLDMATRIX_H
