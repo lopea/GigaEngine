@@ -23,7 +23,7 @@ typedef uint64_t Entity;
 #define SET_AS_DERIVED_COMPONENT(Type, DerivedType) explicit Type(Entity t) : Component(t){} \
                                RTTR_ENABLE(DerivedType)
 
-
+#define ALLOW_COMPONENT_WRITE(WriteComponentType)
 
 /*!
  * Component base for all component types.

@@ -17,7 +17,6 @@ struct Rotation : public Component
     {
       if(value != value_)
       {
-        TagManager::AddTag<DirtyTransform>(GetEntity());
         value_ = value;
       }
     }
