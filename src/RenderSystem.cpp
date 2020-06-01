@@ -20,9 +20,6 @@ void RenderSystem::Update()
   EntityManager::GetEntities().ForEach<Renderer, LocalToWorldMatrix>
           ([](Renderer &renderer, LocalToWorldMatrix &matrix)
            {
-
-              matrix.value[3][3] = 10;
-
                //Bind the matrix to the shader
                glUniformMatrix4fv(glGetUniformLocation(renderer.shader.ID_, "MVP"), 1, GL_FALSE,
                                   glm::value_ptr(matrix.value));

@@ -11,6 +11,7 @@
 #include <iostream>
 #include "ComponentExceptions.h"
 
+
 typedef uint64_t Entity;
 
 

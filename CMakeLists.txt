@@ -6,11 +6,14 @@ project(GigaEngine)
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "-mavx2 -O0")
+set(CMAKE_CXX_FLAGS "-mavx2")
 
 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_definitions(-Ofast)
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     add_definitions(-Ofast)
 endif()
 

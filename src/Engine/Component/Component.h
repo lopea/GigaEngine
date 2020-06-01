@@ -41,4 +41,6 @@ private:
 
 
 
+
+
 #endif //_COMPONENTBASE_H_

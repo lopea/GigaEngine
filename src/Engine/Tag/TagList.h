@@ -36,13 +36,18 @@ public:
 
     ~TagList();
 private:
-    std::set<Entity> entities_;
+    std::deque<Entity> entities_;
+    bool sorted_ = false;
 };
 
 template<typename T>
 void TagList<T>::AddTag(Entity entity)
 {
-  entities_.insert(entity);
+#pragma omp critical
+  {
+    entities_.push_back(entity);
+    sorted_ = false;
+  }
 }
 
 
@@ -55,13 +60,17 @@ TagList<T>::~TagList()
 template<typename T>
 bool TagList<T>::HasTag(Entity entity) const
 {
-  return entities_.find(entity) != entities_.end();
+  return std::find(entities_.begin(),entities_.end(),entity) != entities_.end();
 }
 
 template<typename T>
 void TagList<T>::RemoveTag(Entity entity)
 {
-  entities_.erase(entity);
+  auto it = std::find(entities_.begin(), entities_.end(), entity);
+  if (it != entities_.end())
+  {
+    entities_.erase(it);
+  }
 }
 
 template<typename T>
@@ -80,6 +89,12 @@ template<typename T>
 std::vector<Entity> TagList<T>::GetOverlappingEntities(const std::vector<Entity> &reference)
 {
   std::vector<Entity> result;
+
+  if(!sorted_)
+  {
+    std::sort(entities_.begin(),entities_.end());
+    sorted_ = true;
+  }
 
   std::set_intersection(entities_.begin(), entities_.end(),reference.begin(),reference.end(), std::back_inserter(result));
 

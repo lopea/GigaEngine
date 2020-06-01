@@ -13,8 +13,9 @@
 
 struct LocalToWorldMatrix : public Component
 {
-    glm::mat4x4 value = glm::identity<glm::mat4x4>();
     SET_AS_COMPONENT(LocalToWorldMatrix)
+    glm::mat4x4 value = glm::identity<glm::mat4x4>();
+    bool isDirty = false;
 };
 
 struct DirtyTransform : public TagBase {SET_AS_TAG()};
