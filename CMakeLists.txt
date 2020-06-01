@@ -6,7 +6,7 @@ project(GigaEngine)
 # Setting flags when compiling the project
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "-mavx2")
+set(CMAKE_CXX_FLAGS "-mavx2 -fopenmp")
 
 
 

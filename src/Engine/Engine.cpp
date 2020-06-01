@@ -90,7 +90,7 @@ void Engine::Run()
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
-    for (int i = 0; i < 5000; i++)
+    for (int i = 0; i < 10000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
@@ -143,10 +143,10 @@ void Engine::Run()
         glfwSwapBuffers(Engine::GetScreen().GetWindowHandle());
         glfwPollEvents();
 
-        if (abs(fmod(glfwGetTime(), 0.5)) < 0.01 )
+        if (abs(fmod(glfwGetTime(), 0.5)) < 0.02)
         {
             std::string s = "Fps: ";
-            s += std::to_string(1 / (glfwGetTime() - timer));
+            s += std::to_string((int)(1 / (glfwGetTime() - timer)));
             glfwSetWindowTitle(GetScreen().GetWindowHandle(), s.c_str());
         }
 
