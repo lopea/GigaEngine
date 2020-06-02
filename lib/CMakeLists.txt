@@ -7,6 +7,7 @@ if(MINGW)
     message("-- Using pre-compiled RTTR for windows...")
     find_library(RTTR_LIBRARY rttr_core rttr/lib)
 
+
 #Linux will compile on the RTTR source at build time
 elseif(UNIX)
     message("-- Using RTTR source for Linux/Unix...")
@@ -16,6 +17,7 @@ else()
     #lol funny man trying to use MacOS
     message("-- Have Fun! --")
 endif()
+
 include_directories(rttr/include)
 
 #add_subdirectory(cereal-master)

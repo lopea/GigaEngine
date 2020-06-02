@@ -75,5 +75,12 @@ target_link_libraries(${PROJECT_NAME} glad glfw)
 if(UNIX)
     target_link_libraries(${PROJECT_NAME} rttr_core)
 elseif(MINGW)
+    #link correct library
     target_link_libraries(${PROJECT_NAME} ${RTTR_LIBRARY})
+
+    #copy correct dll to the project folder
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${PROJECT_SOURCE_DIR}/lib/rttr/lib/librttr_core.dll"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 endif()
