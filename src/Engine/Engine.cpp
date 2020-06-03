@@ -12,6 +12,7 @@
 #include "../RotateTestSystem.h"
 #include "../RenderSystem.h"
 #include "../Rotation.h"
+#include "EventManager.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -85,12 +86,38 @@ void Engine::Initialize()
     glUseProgram(shader_.ID_);
 }
 
+void test(int a)
+{
+    std::cout << a << std::endl;
+}
+void anotherone(int a)
+{
+    std::cout << "another " << a << std::endl;
+}
+
+class TestClass
+{
+public:
+    void temp(int a) { std::cout << "this is an instance of " << a << std::endl;}
+};
+
+
 void Engine::Run()
 {
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
     //TODO: Add EventManager and Events
+    EventManager e;
+    e.AddEvent<int>(0);
+    e.SubscribeEvent(0, "E", test);
+
+    std::function<void(int)> func = [&](int a){TestClass temp; temp.temp(a);};
+
+    e.SubscribeEvent<int>(0, "Temp", [&](int a){TestClass temp; temp.temp(a);});
+
+    e.InvokeEvent(0, 5);
+
     for (int i = 0; i < 5000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
@@ -118,7 +145,6 @@ void Engine::Run()
         }
         float timer = glfwGetTime();
 
-        glViewport(0, 0, GetScreen().GetWidth(), GetScreen().GetHeight());
         // render
         // ------
         glClearColor(1,1,1,1);
@@ -130,9 +156,9 @@ void Engine::Run()
         r_system.Update();
         // Shader used to render triangles
 
-        float timeValue = glfwGetTime();
-        float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
-        float x = (tanf(timeValue) / 2.0f) + 0.1f;
+       // float timeValue = glfwGetTime();
+        //float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
+        //float x = (tanf(timeValue) / 2.0f) + 0.1f;
 
         //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
         //shader.setFloat("xOffset", x);

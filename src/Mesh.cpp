@@ -27,7 +27,7 @@ void Mesh::SetVertices(Vertex *array, unsigned int count)
 {
     if(count)
     {
-        for(int i = 0; i < count ; i++)
+        for(unsigned int i = 0; i < count ; i++)
         {
             verts_.push_back(array[i]);
         }

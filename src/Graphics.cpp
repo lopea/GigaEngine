@@ -98,9 +98,9 @@ void Graphics::Update()
         //r_system.Update();
         // Shader used to render triangles
 
-        float timeValue = glfwGetTime();
-        float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
-        float x = (tanf(timeValue) / 2.0f) + 0.1f;
+        //float timeValue = glfwGetTime();
+        //float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
+        //float x = (tanf(timeValue) / 2.0f) + 0.1f;
 
         //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
         //shader.setFloat("xOffset", x);

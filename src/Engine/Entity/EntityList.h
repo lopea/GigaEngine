@@ -311,7 +311,7 @@ void EntityList::ParallelForEach(Func function)
     return;
 
   #pragma omp parallel for schedule(static) shared(function, list1, list2) default(none)
-  for (int i = 0; i < entities_.size(); ++i)
+  for (unsigned int i = 0; i < entities_.size(); ++i)
   {
     Entity entity = entities_[i];
 
@@ -357,7 +357,7 @@ void EntityList::ParallelForEach(Func function)
   if (list)
   {
 #pragma omp parallel for schedule(static) shared(function, list) default(none)
-    for (int i = 0; i < entities_.size(); ++i)
+    for (unsigned int i = 0; i < entities_.size(); ++i)
     {
       Entity entity = entities_[i];
 
@@ -383,7 +383,7 @@ template<typename Func>
 void EntityList::ParallelForEach(Func function)
 {
 #pragma omp parallel for schedule(static) shared(function) default(none)
-  for (int i = 0; i < entities_.size(); ++i)
+  for (unsigned int i = 0; i < entities_.size(); ++i)
   {
     function(entities_[i]);
   }
