@@ -13,6 +13,9 @@
 #include "../RenderSystem.h"
 #include "../Rotation.h"
 #include "EventManager.h"
+#include "../Camera.h"
+#include "../CameraSystem.h"
+#include "RenderBounds.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -107,15 +110,11 @@ void Engine::Run()
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
-    //TODO: Add EventManager and Events
+
     EventManager e;
     e.AddEvent<int>(0);
-    e.SubscribeEvent(0, "E", test);
-
-    std::function<void(int)> func = [&](int a){TestClass temp; temp.temp(a);};
-
-    e.SubscribeEvent<int>(0, "Temp", [&](int a){TestClass temp; temp.temp(a);});
-
+    e.SubscribeEvent(0, "float", test);
+    e.SubscribeEvent<int>(0, "f", [](int a){TestClass c; c.temp(a);});
     e.InvokeEvent(0, 5);
 
     for (int i = 0; i < 5000; i++)
@@ -129,11 +128,15 @@ void Engine::Run()
         Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
         rend->shader = shader_;
         ComponentManager::AddComponent<LocalToWorldMatrix>(ent);
+        ComponentManager::AddComponent<RenderBounds>(ent);
     }
+    Entity &ent = EntityManager::AddEntity();
+    Translation* tr = ComponentManager::AddComponent<Translation>(ent);
 
-    MatrixSystem m_system;
-    RenderSystem r_system;
+    Camera* camera = ComponentManager::AddComponent<Camera>(ent);
+
     RotateTestSystem rot_system;
+    CameraSystem c_system;
 
     //check if the engine is still running
     while (running_)
@@ -145,6 +148,29 @@ void Engine::Run()
         }
         float timer = glfwGetTime();
 
+        if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_D))
+        {
+          glm::vec3 pos = tr->Get();
+          pos.x -= 200 * 0.0016;
+          tr->Set(pos);
+        }
+      if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_W))
+      {
+        if(camera->zoom < 0)
+          camera->zoom = 0;
+
+        camera->zoom -= 200 * 0.0016;
+      }
+        if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_A))
+        {
+          glm::vec3 pos = tr->Get();
+          pos.x += 200 * 0.0016;
+          tr->Set(pos);
+        }
+        if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_S))
+        {
+          camera->zoom += 200 * 0.0016;
+        }
         // render
         // ------
         glClearColor(1,1,1,1);
@@ -152,8 +178,9 @@ void Engine::Run()
 
 
         rot_system.Update();
-        m_system.Update();
-        r_system.Update();
+        c_system.Update();
+        //m_system.Update();
+        //r_system.Update();
         // Shader used to render triangles
 
        // float timeValue = glfwGetTime();

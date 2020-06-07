@@ -54,16 +54,15 @@ public:
 
     size_t size() const;
 
-
-private:
     void Add(Entity entity);
 
     explicit EntityList(std::vector<Entity> entity);
+private:
 
     std::vector<Entity> entities_;
 
     friend class EntityManager;
-
+    friend class TagManager;
     bool main_;
 
     Entity &back();

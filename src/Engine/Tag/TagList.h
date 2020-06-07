@@ -28,6 +28,8 @@ public:
 
     void RemoveTag(Entity entity);
 
+    void RemoveTags(std::vector<Entity>& entities);
+
     void clear();
 
     bool empty() const;
@@ -38,6 +40,7 @@ public:
 private:
     std::deque<Entity> entities_;
     bool sorted_ = false;
+
 };
 
 template<typename T>
@@ -45,8 +48,8 @@ void TagList<T>::AddTag(Entity entity)
 {
 #pragma omp critical
   {
-    entities_.push_back(entity);
-    sorted_ = false;
+      entities_.push_back(entity);
+      sorted_ = false;
   }
 }
 
@@ -66,7 +69,8 @@ bool TagList<T>::HasTag(Entity entity) const
 template<typename T>
 void TagList<T>::RemoveTag(Entity entity)
 {
-  auto it = std::find(entities_.begin(), entities_.end(), entity);
+  auto it = std::find(entities_.begin(),entities_.end(), entity);
+
   if (it != entities_.end())
   {
     entities_.erase(it);
@@ -100,6 +104,17 @@ std::vector<Entity> TagList<T>::GetOverlappingEntities(const std::vector<Entity>
 
   return result;
 }
+
+template<typename T>
+void TagList<T>::RemoveTags(std::vector<Entity> &entities)
+{
+  for(Entity entity : entities)
+  {
+    RemoveTag(entities);
+  }
+}
+
+
 
 
 #endif //GIGAENGINE_TAGLIST_H

@@ -8,10 +8,13 @@
 
 #include "Engine/Systems/SystemBase.h"
 
+class EntityList;
+
 class MatrixSystem : public SystemBase
 {
 public:
     void Update() override;
+    static void UpdateMatrices(EntityList& list);
 };
 
 

@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include "TagList.h"
 
+class EntityList;
+
 class TagManager
 {
 public:
@@ -20,6 +22,9 @@ public:
 
     template<typename T>
     static void RemoveTag(Entity entity);
+
+    template<typename T>
+    static void RemoveTags(EntityList& list);
 
     template<typename T>
     static void  ClearAllTagsOfType();
@@ -78,6 +83,17 @@ void TagManager::RemoveTag(Entity entity)
   {
     list->RemoveTag(entity);
   }
+}
+
+template<typename T>
+void TagManager::RemoveTags(EntityList& list)
+{
+  TagList<T>* l = GetList<T>();
+  if(!l)
+    return;
+
+  l.RemoveTags(list);
+
 }
 
 template<typename T>

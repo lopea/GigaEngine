@@ -39,21 +39,19 @@ private:
 
     void Invoke(Args... args);
 
-    std::unordered_map<size_t, std::function<void(Args...)> > functions_;
-    std::hash<std::string> hash_;
+    std::unordered_map<std::string, std::function<void(Args...)> > functions_;
 };
 
 template<typename... Args>
 void Event<Args...>::Subscribe(const std::string& id, std::function<void(Args...)> func)
 {
-    size_t hash = hash_(id);
-    functions_[hash] = func;
+    functions_[id] = func;
 }
 
 template<typename... Args>
 void Event<Args...>::Unsubscribe(const std::string& id)
 {
-    functions_.erase(hash_(id));
+    functions_.erase(id);
 }
 
 template<typename... Args>
