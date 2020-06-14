@@ -17,31 +17,42 @@ void CameraSystem::Update()
   EntityManager::GetEntities().ForEach<Camera, Translation>
           ([](Camera &camera, Translation &translation)
            {
-               std::vector<Entity> ents;
+               //store all entities in the camera's sight
+               EntityList list;
+
+               //Go through each list with a render bounds and a translation component
                EntityManager::GetEntities().ForEach<RenderBounds, Translation>(
-                       [camera, translation, &ents](RenderBounds &bounds, Translation &currPos)
+                       [camera, translation, &list](RenderBounds &bounds, Translation &currPos)
                        {
+                           //get the position of the current entity
                            auto pos = currPos.Get();
+
+                           //get the current camera position
                            auto cameraPos = translation.Get();
+
+                           //check if the camera is looking at the current entity
                            if (pos.x + bounds.width / 2 >= cameraPos.x - camera.zoom / 2
                                && cameraPos.x + camera.zoom / 2 >= pos.x - bounds.width / 2
                                && pos.y + bounds.height / 2 >= cameraPos.y - camera.zoom / 2
                                && cameraPos.y + camera.zoom / 2 >= pos.y - bounds.height / 2)
                            {
-
-                             ents.push_back(currPos.GetEntity());
+                             //Add it to the list if it is
+                             list.Add(currPos.GetEntity());
                            }
                        });
 
-               EntityList list = EntityList(ents);
-
+               //if the list is not empty,
                if (!list.empty())
                {
+                 //Get View Matrix
                  glm::mat4 view = Camera::GenerateViewMatrix(camera, translation);
+                 //Get Perspective Matrix
                  glm::mat4 ortho = Camera::GenerateOrthoMatrix(camera);
 
+                 //Update all Model Matrices for each entity that is in the list
                  MatrixSystem::UpdateMatrices(list);
 
+                 //Render All entities in the camera's view.
                  list.ForEach<Renderer, LocalToWorldMatrix>
                          ([&view, &ortho](Renderer &renderer, LocalToWorldMatrix &matrix)
                           {

@@ -42,6 +42,8 @@ public:
     template<typename T>
     static void RemoveComponent(Entity entity);
 
+    static void RemoveComponents(Entity entity);
+
     template<typename T>
     static void RemoveAllComponents();
 private:
@@ -165,6 +167,14 @@ void ComponentManager::RemoveComponent(Entity entity)
   {
     list->RemoveComponent(entity);
   }
+}
+
+inline void ComponentManager::RemoveComponents(Entity entity)
+{
+    for(auto it : manager_.lists_)
+    {
+        it.second->RemoveComponent(entity);
+    }
 }
 
 #endif //_COMPONENTMANAGER_H_

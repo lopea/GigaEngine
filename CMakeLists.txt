@@ -39,7 +39,7 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Engine.h
         src/Engine/Math.h
         src/Engine/Screen.cpp
-        src/Engine/Screen.h src/Engine/Tag/TagBase.h src/Engine/Tag/TagManager.h src/Engine/Tag/TagList.h src/Engine/EventManager.h src/Engine/Quadtree.cpp src/Engine/Quadtree.h src/Engine/RenderBounds.h src/CameraSystem.cpp src/CameraSystem.h)
+        src/Engine/Screen.h src/Engine/Tag/TagBase.h src/Engine/Tag/TagManager.h src/Engine/Tag/TagList.h src/Engine/EventManager.h src/Engine/Quadtree.cpp src/Engine/Quadtree.h src/Engine/RenderBounds.h src/CameraSystem.cpp src/CameraSystem.h src/Engine/Time.cpp src/Engine/Time.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES
@@ -62,7 +62,10 @@ set(Giga_SOURCES
         src/RenderSystem.cpp
         src/RenderSystem.h
         src/RotateTestSystem.cpp
-        src/RotateTestSystem.h src/UniformScale.h src/Camera.cpp src/Camera.h)
+        src/RotateTestSystem.h
+        src/UniformScale.h
+        src/Camera.cpp
+        src/Camera.h)
 
 
 

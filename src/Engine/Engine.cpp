@@ -16,6 +16,7 @@
 #include "../Camera.h"
 #include "../CameraSystem.h"
 #include "RenderBounds.h"
+#include "Time.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -141,17 +142,17 @@ void Engine::Run()
     //check if the engine is still running
     while (running_)
     {
+        Time::Update();
+        EntityManager::CheckForDestruction();
         if (glfwWindowShouldClose(GetScreen().GetWindowHandle()))
         {
             running_ = false;
             Engine::Terminate();
         }
-        float timer = glfwGetTime();
-
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_D))
         {
           glm::vec3 pos = tr->Get();
-          pos.x -= 200 * 0.0016;
+          pos.x -= 200 * Time::deltaTime;
           tr->Set(pos);
         }
       if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_W))
@@ -169,12 +170,14 @@ void Engine::Run()
         }
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_S))
         {
-          camera->zoom += 200 * 0.0016;
+          camera->zoom += 200 * Time::deltaTime;
         }
         // render
         // ------
         glClearColor(1,1,1,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
 
         rot_system.Update();
@@ -200,7 +203,7 @@ void Engine::Run()
         if (abs(fmod(glfwGetTime(), 0.5)) < 0.02)
         {
             std::string s = "Fps: ";
-            s += std::to_string((int)(1 / (glfwGetTime() - timer)));
+            s += std::to_string(Time::fps);
             glfwSetWindowTitle(GetScreen().GetWindowHandle(), s.c_str());
         }
 

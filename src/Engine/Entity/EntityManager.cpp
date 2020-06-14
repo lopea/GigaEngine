@@ -16,16 +16,24 @@ EntityManager EntityManager::manager_ = EntityManager();
 Entity& EntityManager::AddEntity ()
 {
     //store next entity value
-  static unsigned int id = 0;
+  static Entity id = 0;
+  if(!manager_.available_.empty())
+  {
+      manager_.entities_.Add(manager_.available_.front());
+      manager_.available_.pop_front();
+  }
+  else
+  {
+      //add the new entity to the list
+      manager_.entities_.Add(id);
 
-  //add the new entity to the list
-  manager_.entities_.Add(Entity(id));
+      //add for next entity
+      id++;
 
-  //add for next entity
-  id++;
+  }
+    //send it off!
+    return manager_.entities_.back();
 
-  //send it off!
-  return manager_.entities_.back();
 }
 
 void EntityManager::Initialize ()
@@ -35,11 +43,16 @@ void EntityManager::Initialize ()
 }
 void EntityManager::DestroyEntity (Entity entity)
 {
-
+    manager_.destroy_.insert(entity);
 }
 void EntityManager::CheckForDestruction ()
 {
-  //TODO: do it.
+  for(Entity ent : manager_.destroy_)
+  {
+      ComponentManager::RemoveComponents(ent);
+  }
+  manager_.available_.insert(manager_.available_.begin(),manager_.destroy_.begin(), manager_.destroy_.end());
+  manager_.destroy_.clear();
 }
 
 EntityManager::EntityManager() : entities_()

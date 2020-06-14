@@ -21,8 +21,8 @@ class EntityManager {
     static void Shutdown();
   static EntityManager manager_;
   EntityList entities_;
-  std::vector<Entity> destroy_;
-  std::vector<Entity> available_;
+  std::set<Entity> destroy_;
+  std::deque<Entity> available_;
   static bool Init_;
   friend class Engine;
 };

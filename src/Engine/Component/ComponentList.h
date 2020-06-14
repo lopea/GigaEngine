@@ -22,6 +22,7 @@ class GenericComponentList
 {
 public :
     virtual ~GenericComponentList() = default;
+    virtual void RemoveComponent(Entity ent) = 0;
 };
 
 /*!
@@ -36,7 +37,7 @@ public:
 
     T *AddComponent(Entity entity);
 
-    void RemoveComponent(Entity entity);
+    void RemoveComponent(Entity entity) override;
 
     size_t size();
 
