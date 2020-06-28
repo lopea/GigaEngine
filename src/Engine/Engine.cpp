@@ -32,10 +32,12 @@ void Engine::Initialize()
     if (init_)
     { return; }
 
+    //glfw could not initialize
     if (!glfwInit())
         return;
 
 
+    //set shit up
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -100,7 +102,7 @@ void Engine::Run()
 
     for (int i = 0; i < 1000; i++)
     {
-        Entity &ent = EntityManager::AddEntity();
+        Entity ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
         Translation *t = ComponentManager::AddComponent<Translation>(ent);
         t->Set(glm::vec3(i % 100 - 25, i / 100, i/500.0f));
@@ -111,13 +113,15 @@ void Engine::Run()
         ComponentManager::AddComponent<LocalToWorldMatrix>(ent);
         ComponentManager::AddComponent<RenderBounds>(ent);
     }
-    Entity &ent = EntityManager::AddEntity();
+    Entity ent = EntityManager::AddEntity();
     Translation* tr = ComponentManager::AddComponent<Translation>(ent);
 
     Camera* camera = ComponentManager::AddComponent<Camera>(ent);
 
     RotateTestSystem rot_system;
     CameraSystem c_system;
+
+    bool check = false;
 
     //check if the engine is still running
     while (running_)
@@ -127,7 +131,10 @@ void Engine::Run()
             running_ = false;
             Engine::Terminate();
         }
+
         Time::Update();
+        EntityManager::CheckForDestruction();
+
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_D))
         {
           glm::vec3 pos = tr->Get();
@@ -149,7 +156,7 @@ void Engine::Run()
         }
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_S))
         {
-          camera->zoom += 100 * 0.0016;
+          camera->zoom += 100 * Time::DeltaTime;
         }
         // render
         // ------
@@ -167,6 +174,31 @@ void Engine::Run()
             std::string s = "Fps: ";
             s += std::to_string((int)(Time::FramesPerSecond));
             glfwSetWindowTitle(GetScreen().GetWindowHandle(), s.c_str());
+        }
+        if(Time::CurrentTime > 5  && Time::CurrentTime < 10 && !check)
+        {
+            for(int i = 0; i < 100; i ++)
+            {
+                EntityManager::DestroyEntity(i);
+            }
+            check = true;
+        }
+        if(Time::CurrentTime > 10 && check)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Entity e = EntityManager::AddEntity();
+                //e.AddComponent<ComponentTest>();
+                Translation *t = ComponentManager::AddComponent<Translation>(e);
+                t->Set(glm::vec3(i % 100 - 25, i / 100, i/500.0f));
+                ComponentManager::AddComponent<Rotation>(e);
+                ComponentManager::AddComponent<UniformScale>(e);
+                Renderer *rend = ComponentManager::AddComponent<Renderer>(e);
+                rend->shader = shader_;
+                ComponentManager::AddComponent<LocalToWorldMatrix>(e);
+                ComponentManager::AddComponent<RenderBounds>(e);
+            }
+            check = false;
         }
 
     }

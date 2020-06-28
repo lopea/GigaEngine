@@ -12,7 +12,7 @@ typedef uint64_t Entity;
 class EntityManager {
  public:
   static void Initialize();
-  static Entity& AddEntity();
+  static Entity AddEntity();
   static void DestroyEntity(Entity entity);
   static void CheckForDestruction();
   static EntityList& GetEntities();

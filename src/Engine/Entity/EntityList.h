@@ -10,6 +10,7 @@
 #include "../Tag/TagBase.h"
 #include "../Tag/TagManager.h"
 #include <omp.h>
+#include <utility>
 #include <vector>
 #include <algorithm>
 
@@ -28,7 +29,7 @@ public:
     void ForEach(Func function);
 
     template<typename T>
-    EntityList OfType() const;
+    EntityList OfType();
 
     template<typename T1, typename T2>
     EntityList OfTypes() const;
@@ -64,25 +65,27 @@ private:
     friend class EntityManager;
     friend class TagManager;
     bool main_;
+    bool sorted_;
 
-    Entity &back();
+    Entity back();
 
     void clear();
 
+    void sort();
 };
 
 /*!
  * EntityList Conversion Constructor, convert a vector of entities to a EntityList
  * @param entity the vector of entities to add to a list
  */
-inline EntityList::EntityList(std::vector<Entity> entity) : entities_(entity), main_(false)
+inline EntityList::EntityList(std::vector<Entity> entity) : entities_(std::move(entity)), main_(false), sorted_(false)
 {}
 
 /*!
  * Gets the last entity in the list, for internal use only
  * @return the last entity in the list
  */
-inline Entity &EntityList::back()
+inline Entity EntityList::back()
 {
   return entities_.back();
 }
@@ -94,6 +97,7 @@ inline Entity &EntityList::back()
 inline void EntityList::Add(Entity entity)
 {
   entities_.push_back(entity);
+  sorted_ = false;
 }
 
 
@@ -197,7 +201,7 @@ EntityList EntityList::OfTypes() const
  * @return A list with all entities that contain a component of type T
  */
 template<typename T>
-EntityList EntityList::OfType() const
+EntityList EntityList::OfType()
 {
   rttr::type t = rttr::type::get<T>();
   if(t.is_derived_from<TagBase>())
@@ -205,6 +209,9 @@ EntityList EntityList::OfType() const
     TagList<T>* list = TagManager::GetList<T>();
     if(list)
     {
+      if(!sorted_)
+          sort();
+
       std::vector<Entity> ents = list->GetOverlappingEntities(entities_);
 
       return EntityList(ents);
@@ -337,6 +344,12 @@ inline bool EntityList::empty() const
 inline void EntityList::clear()
 {
   return entities_.clear();
+}
+
+inline void EntityList::sort()
+{
+    std::sort(entities_.begin(), entities_.end());
+    sorted_ = true;
 }
 
 /*!

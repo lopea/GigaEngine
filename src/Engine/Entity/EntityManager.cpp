@@ -13,7 +13,7 @@ EntityManager EntityManager::manager_ = EntityManager();
  * Creates a new entity and adds the new entity to the entity manager.
  * @return Reference to the new entity created
  */
-Entity& EntityManager::AddEntity ()
+Entity EntityManager::AddEntity ()
 {
     //store next entity value
   static Entity id = 0;
