@@ -355,7 +355,7 @@ void EntityList::ParallelForEach(Func function)
   ComponentList<T> *list = ComponentManager::GetList<T>();
   if (list)
   {
-#pragma omp parallel for schedule(static) shared(function, list) default(none)
+#pragma omp parallel for schedule(dynamic) shared(function, list) default(none)
     for (unsigned int i = 0; i < entities_.size(); ++i)
     {
       Entity entity = entities_[i];

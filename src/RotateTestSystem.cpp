@@ -11,7 +11,7 @@
 void RotateTestSystem::Update()
 {
     float time =  glfwGetTime();
-    EntityManager::GetEntities().ParallelForEach<Rotation>
+    EntityManager::GetEntities().ForEach<Rotation>
             ([time](Rotation& rot)
             {
                 rot.Set(glm::sin(time + rot.GetEntity()) * 10);

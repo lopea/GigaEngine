@@ -109,14 +109,14 @@ T *ComponentManager::AddComponent(Entity entity)
   auto it = manager_.lists_.find(t);
 
   //if a list has been found,
-  if (it != manager_.lists_.end())
-  {
-    //cast the list to the correct type
-    ComponentList<T> *list = static_cast<ComponentList<T> *>(it->second);
+    if (it != manager_.lists_.end())
+    {
+        //cast the list to the correct type
+        ComponentList<T> *list = static_cast<ComponentList<T> *>(it->second);
 
-    //add the component to the list and return the result
-    return list->AddComponent(entity);
-  }
+        //add the component to the list and return the result
+        return list->AddComponent(entity);
+    }
 
   //list of type does not exist, add it to the manager
   ComponentList<T> *newList = new ComponentList<T>;

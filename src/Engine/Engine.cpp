@@ -90,40 +90,20 @@ void Engine::Initialize()
     glUseProgram(shader_.ID_);
 }
 
-void test(int a)
-{
-    std::cout << a << std::endl;
-}
-void anotherone(int a)
-{
-    std::cout << "another " << a << std::endl;
-}
-
-class TestClass
-{
-public:
-    void temp(int a) { std::cout << "this is an instance of " << a << std::endl;}
-};
-
-
 void Engine::Run()
 {
     //creates entities and adds components to them for use in a game
     //TODO: Create Archetypes to avoid doing this every time
     //TODO: Create ArchetypeManager to save all archetypes in a file
 
-    EventManager e;
-    e.AddEvent<int>(0);
-    e.SubscribeEvent(0, "float", test);
-    e.SubscribeEvent<int>(0, "f", [](int a){TestClass c; c.temp(a);});
-    e.InvokeEvent(0, 5);
 
-    for (int i = 0; i < 5000; i++)
+
+    for (int i = 0; i < 1000; i++)
     {
         Entity &ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
         Translation *t = ComponentManager::AddComponent<Translation>(ent);
-        t->Set(glm::vec3(i % 100 - 25, i / 100, 0));
+        t->Set(glm::vec3(i % 100 - 25, i / 100, i/500.0f));
         ComponentManager::AddComponent<Rotation>(ent);
         ComponentManager::AddComponent<UniformScale>(ent);
         Renderer *rend = ComponentManager::AddComponent<Renderer>(ent);
@@ -142,17 +122,16 @@ void Engine::Run()
     //check if the engine is still running
     while (running_)
     {
-        Time::Update();
-        EntityManager::CheckForDestruction();
         if (glfwWindowShouldClose(GetScreen().GetWindowHandle()))
         {
             running_ = false;
             Engine::Terminate();
         }
+        Time::Update();
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_D))
         {
           glm::vec3 pos = tr->Get();
-          pos.x -= 200 * Time::deltaTime;
+          pos.x -= 100 * Time::DeltaTime;
           tr->Set(pos);
         }
       if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_W))
@@ -160,17 +139,17 @@ void Engine::Run()
         if(camera->zoom < 0)
           camera->zoom = 0;
 
-        camera->zoom -= 200 * 0.0016;
+        camera->zoom -= 100 * Time::DeltaTime;
       }
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_A))
         {
           glm::vec3 pos = tr->Get();
-          pos.x += 200 * 0.0016;
+          pos.x += 100 * Time::DeltaTime;
           tr->Set(pos);
         }
         if(glfwGetKey(GetScreen().GetWindowHandle(),GLFW_KEY_S))
         {
-          camera->zoom += 200 * Time::deltaTime;
+          camera->zoom += 100 * 0.0016;
         }
         // render
         // ------
@@ -178,32 +157,15 @@ void Engine::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-
-
         rot_system.Update();
         c_system.Update();
-        //m_system.Update();
-        //r_system.Update();
-        // Shader used to render triangles
-
-       // float timeValue = glfwGetTime();
-        //float greenValue = (sinf(timeValue) / 2.0f) + 0.5f;
-        //float x = (tanf(timeValue) / 2.0f) + 0.1f;
-
-        //shader.setColor("myColor", 1.0f, greenValue, 0.5f);
-        //shader.setFloat("xOffset", x);
-
-        // Used to draw a single triangle
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
         glfwSwapBuffers(Engine::GetScreen().GetWindowHandle());
         glfwPollEvents();
 
         if (abs(fmod(glfwGetTime(), 0.5)) < 0.02)
         {
             std::string s = "Fps: ";
-            s += std::to_string(Time::fps);
+            s += std::to_string((int)(Time::FramesPerSecond));
             glfwSetWindowTitle(GetScreen().GetWindowHandle(), s.c_str());
         }
 
