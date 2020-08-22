@@ -100,7 +100,7 @@ void Engine::Run()
 
 
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10000; i++)
     {
         Entity ent = EntityManager::AddEntity();
         //ent.AddComponent<ComponentTest>();
