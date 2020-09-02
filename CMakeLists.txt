@@ -48,7 +48,7 @@ set(Giga_ENGINE_SOURCES
         src/Engine/Quadtree.h
         src/Engine/RenderBounds.h
         src/CameraSystem.cpp
-        src/CameraSystem.h)
+        src/CameraSystem.h src/Engine/Systems/SystemManager.cpp src/Engine/Systems/SystemManager.h)
 
 # All the sources for building the Giga Grunts Engine
 set(Giga_SOURCES

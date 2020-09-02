@@ -113,6 +113,7 @@ void Engine::Run()
         ComponentManager::AddComponent<LocalToWorldMatrix>(ent);
         ComponentManager::AddComponent<RenderBounds>(ent);
     }
+
     Entity ent = EntityManager::AddEntity();
     Translation* tr = ComponentManager::AddComponent<Translation>(ent);
 
@@ -177,7 +178,7 @@ void Engine::Run()
         }
         if(Time::CurrentTime > 5  && Time::CurrentTime < 10 && !check)
         {
-            for(int i = 0; i < 100; i ++)
+            for(int i = 0; i < 500; i ++)
             {
                 EntityManager::DestroyEntity(i);
             }
@@ -185,7 +186,7 @@ void Engine::Run()
         }
         if(Time::CurrentTime > 10 && check)
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 500; i++)
             {
                 Entity e = EntityManager::AddEntity();
                 //e.AddComponent<ComponentTest>();
