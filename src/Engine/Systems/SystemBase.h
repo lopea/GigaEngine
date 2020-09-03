@@ -12,6 +12,8 @@ class SystemBase
 {
  public:
   virtual void Update() = 0;
+  virtual void Init(){};
+  virtual void Exit(){};
 };
 
 #endif //_SYSTEMBASE_H_
